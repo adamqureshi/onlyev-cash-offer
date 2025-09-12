@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OnlyEV — Cash Offer for Your EV</title>
+  <meta name="description" content="Get a fast cash offer for your Tesla, Rivian, or Lucid. Enter your VIN, confirm details, and receive dealer offers from OnlyEV." />
+  <style>
+    :root{
+      --bg:#0b0b0b;
+      --panel:#111;
+      --muted:#6b7280;
+      --text:#e5e7eb;
+      --card:#1a1a1a;
+      --input:#222;
+      --border:#2b2b2b;
+      /* Accent color for primary buttons (change this to your brand color later) */
+      --accent:#0ea5e9; /* cyan */
+      --accent-contrast:#06171d;
+      --good:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:radial-gradient(1200px 600px at 80% -10%, #171717, #0c0c0c 60%), var(--bg);
+      color:var(--text);
+      font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;
+    }
+    a{color:var(--text); text-decoration:none}
+    .container{max-width:1200px; margin:0 auto; padding:28px 20px 56px}
+    .header{
+      display:flex; align-items:center; justify-content:space-between; gap:16px; padding:8px 0 16px;
+    }
+    .brand{display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.2px}
+    .brand-badge{width:28px; height:28px; border-radius:7px; background:conic-gradient(from 180deg, #777 0 25%, #999 0 50%, #777 0 75%, #aaa 0 100%); box-shadow:0 0 0 2px #222 inset}
+    .subtle{color:var(--muted); font-size:14px}
+    .hero{
+      display:grid; grid-template-columns:1.1fr .9fr; gap:36px; align-items:start; margin-top:10px;
+    }
+    .hero h1{font-size:44px; line-height:1.05; margin:0 0 12px}
+    .pill{display:inline-flex; gap:8px; align-items:center; font-size:12px; padding:6px 10px; border:1px solid var(--border); border-radius:999px; color:#cbd5e1; background:#0f0f0f}
+    .points{margin:22px 0 14px; padding-left:0; list-style:none}
+    .points li{margin:10px 0; display:flex; gap:10px; align-items:flex-start}
+    .points b{color:#fff}
+    .points .dot{width:8px; height:8px; margin-top:7px; border-radius:50%; background:linear-gradient(145deg,#6b7280,#9ca3af)}
+    .card{
+      background:linear-gradient(180deg, #121212, #0d0d0d);
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow:0 8px 30px rgba(0,0,0,.35);
+      padding:18px;
+    }
+    .vinBox{
+      display:flex; gap:10px; margin:12px 0 18px;
+    }
+    input, select, button, textarea{
+      font:inherit; color:#e5e7eb;
+    }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select{
+      width:100%; padding:12px 12px; border-radius:10px; border:1px solid var(--border); background:var(--input); outline:none;
+    }
+    input:focus, select:focus{border-color:#3a3a3a; box-shadow:0 0 0 3px rgba(14,165,233,.15)}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px; padding:12px 16px; border-radius:10px; border:1px solid transparent;
+      background:linear-gradient(180deg, var(--accent), #0894d3 70%); color:#001018; font-weight:700; cursor:pointer;
+    }
+    .btn.secondary{background:#151515; color:#d1d5db; border-color:#2b2b2b}
+    .btn:disabled{opacity:.6; cursor:not-allowed}
+    .grid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    .form-title{font-weight:700; margin:0 0 8px}
+    .muted{color:#a3a3a3; font-size:14px}
+    .support{font-size:12px; color:#9ca3af; margin-top:6px}
+    .decoded{
+      display:flex; gap:10px; flex-wrap:wrap; margin-top:4px;
+    }
+    .chip{font-size:12px; padding:5px 8px; border:1px solid var(--border); border-radius:999px; background:#121212}
+    .alert{padding:10px 12px; border-radius:10px; background:#121212; border:1px solid var(--border); color:#e5e7eb}
+    .alert.bad{border-color:#3a1d1d; background:#171213; color:#fca5a5}
+    .alert.good{border-color:#14351c; background:#0f1a12; color:#bbf7d0}
+    .progress{
+      height:8px; width:100%; border-radius:999px; background:#151515; border:1px solid #262626; overflow:hidden;
+    }
+    .progress > i{display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--accent), #7dd3fc); transition:width .3s ease}
+    .footer{
+      margin-top:36px; padding-top:18px; border-top:1px solid #1f1f1f; color:#a1a1aa; font-size:12px
+    }
+    .disclaimer{font-size:12px; color:#9ca3af; margin-top:8px}
+    @media (max-width: 980px){
+      .hero{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <span>OnlyEV</span>
+      </div>
+      <div class="pill">Cash Offers for EVs</div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1>Instant Cash Offers for <br/>Tesla, Rivian &amp; Lucid</h1>
+        <p class="subtle">Sell your EV fast. Real offers from our nationwide dealer network.</p>
+        <ul class="points">
+          <li><span class="dot"></span> <span><b>EV‑specific valuations.</b> We don’t use outdated ICE formulas.</span></li>
+          <li><span class="dot"></span> <span><b>Get an offer in minutes.</b> Most deals close in &lt; 48 hours.</span></li>
+          <li><span class="dot"></span> <span><b>True market pricing.</b> Backed by hungry EV buyers across the U.S.</span></li>
+        </ul>
+        <div class="alert">Dealers: Have a trade‑in EV? Use the same form and select “I’m a dealer.”</div>
+      </div>
+
+      <div class="card">
+        <div class="form-title">Start with your VIN</div>
+        <div class="vinBox">
+          <input id="vin" type="text" inputmode="latin" minlength="11" maxlength="17" placeholder="Enter a 17‑character VIN" autocomplete="off" />
+          <button id="decodeBtn" class="btn" type="button" aria-label="Decode VIN">Decode</button>
+        </div>
+        <div id="decodeInfo" class="decoded" aria-live="polite"></div>
+        <div id="decodeWarn" class="support"></div>
+
+        <hr style="border:0; border-top:1px solid var(--border); margin:16px 0">
+
+        <form id="leadForm" novalidate>
+          <div class="row">
+            <div>
+              <label class="muted" for="miles">Miles</label>
+              <input id="miles" type="number" min="0" step="1" placeholder="e.g., 24,800" />
+            </div>
+            <div>
+              <label class="muted" for="trim">Trim</label>
+              <input id="trim" type="text" placeholder="Auto‑filled if available" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label class="muted" for="zip">Vehicle Location ZIP</label>
+              <input id="zip" type="text" inputmode="numeric" pattern="[0-9]{5}" placeholder="ZIP code" />
+            </div>
+            <div class="grid" style="grid-template-columns:1fr 1fr">
+              <div>
+                <label class="muted" for="first">First Name</label>
+                <input id="first" type="text" placeholder="First name" />
+              </div>
+              <div>
+                <label class="muted" for="last">Last Name</label>
+                <input id="last" type="text" placeholder="Last name" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label class="muted" for="email">Email</label>
+              <input id="email" type="email" placeholder="you@example.com" />
+            </div>
+            <div>
+              <label class="muted" for="phone">Phone</label>
+              <input id="phone" type="tel" placeholder="(555) 555‑5555" />
+            </div>
+          </div>
+
+          <div class="grid">
+            <div>
+              <label class="muted">Who are you?</label>
+              <div style="display:flex; gap:12px; margin-top:4px">
+                <label><input type="radio" name="persona" value="dealer"> I’m a dealer</label>
+                <label><input type="radio" name="persona" value="private" checked> This is my personal car</label>
+              </div>
+            </div>
+            <div id="dealerExtras" style="display:none">
+              <label class="muted" for="dealerName">Dealership (optional)</label>
+              <input id="dealerName" type="text" placeholder="Dealer name" />
+            </div>
+          </div>
+
+          <div class="grid" style="margin-top:8px">
+            <div>
+              <label class="muted">Title / Loan Status</label>
+              <div style="display:flex; gap:12px; margin-top:4px">
+                <label><input type="radio" name="lien" value="title_in_hand" checked> Title in hand</label>
+                <label><input type="radio" name="lien" value="has_loan"> I have a loan</label>
+              </div>
+            </div>
+            <div id="payoffWrap" style="display:none">
+              <label class="muted" for="payoff">Approx. Loan Payoff (optional)</label>
+              <input id="payoff" type="number" min="0" step="1" placeholder="e.g., 27500" />
+            </div>
+          </div>
+
+          <div style="margin:12px 0 8px">
+            <label class="muted"><input id="consent" type="checkbox" /> I agree to be contacted about my offer and accept the OnlyEV terms.</label>
+          </div>
+
+          <div class="progress" aria-label="Form completion">
+            <i id="progress"></i>
+          </div>
+
+          <div style="display:flex; gap:12px; align-items:center; margin-top:14px">
+            <button id="submitBtn" class="btn" type="submit">Get Cash Offer</button>
+            <button id="saveBtn" class="btn secondary" type="button">Save &amp; finish later</button>
+          </div>
+
+          <div class="disclaimer">Supported today: Tesla, Rivian, Lucid. If your EV is another make, we’ll still try to route it to buyers—offers may take longer.</div>
+
+          <!-- Hidden fields populated from VIN decoding -->
+          <input type="hidden" id="year">
+          <input type="hidden" id="make">
+          <input type="hidden" id="model">
+          <input type="hidden" id="bodyClass">
+          <input type="hidden" id="driveType">
+        </form>
+      </div>
+    </section>
+
+    <footer class="footer">
+      © <span id="yearNow"></span> OnlyEV. All rights reserved.
+    </footer>
+  </div>
+
+<script>
+(function(){
+  const byId = (id)=>document.getElementById(id);
+  const vinEl = byId('vin');
+  const decodeBtn = byId('decodeBtn');
+  const info = byId('decodeInfo');
+  const warn = byId('decodeWarn');
+  const form = byId('leadForm');
+  const progressBar = byId('progress');
+  const submitBtn = byId('submitBtn');
+  const saveBtn = byId('saveBtn');
+  const payoffWrap = byId('payoffWrap');
+  const dealerExtras = byId('dealerExtras');
+
+  // Year in footer
+  byId('yearNow').textContent = new Date().getFullYear();
+
+  // Persona toggle
+  form.addEventListener('change', (e)=>{
+    if(e.target.name === 'persona'){
+      dealerExtras.style.display = (e.target.value === 'dealer') ? 'block' : 'none';
+    }
+    if(e.target.name === 'lien'){
+      payoffWrap.style.display = (e.target.value === 'has_loan') ? 'block' : 'none';
+    }
+    updateProgress();
+  });
+
+  // Simple progress: count required-like fields
+  const requiredFields = ['vin','zip','first','last','email','phone'];
+  function updateProgress(){
+    let filled = 0;
+    requiredFields.forEach(id=>{
+      const el = id==='vin'?vinEl:byId(id);
+      if(el && String(el.value).trim().length>0) filled++;
+    });
+    // Boost if consent
+    if(byId('consent').checked) filled++;
+    const pct = Math.min(100, Math.round((filled / (requiredFields.length+1)) * 100));
+    progressBar.style.width = pct + '%';
+  }
+  ['input','change','keyup','blur'].forEach(evt=>{
+    form.addEventListener(evt, updateProgress);
+  });
+  vinEl.addEventListener('input', updateProgress);
+
+  async function decodeVIN(){
+    const raw = vinEl.value.trim().toUpperCase();
+    info.innerHTML = '';
+    warn.textContent = '';
+    if(raw.length < 11){
+      warn.textContent = 'Enter a complete VIN (17 characters preferred).';
+      return;
+    }
+    decodeBtn.disabled = true;
+    decodeBtn.textContent = 'Decoding…';
+    try{
+      // Free public NHTSA VIN decoder
+      const url = `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${encodeURIComponent(raw)}?format=json`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const row = (data && data.Results && data.Results[0]) || {};
+      const year = row.ModelYear || '';
+      const make = (row.Make || '').toUpperCase();
+      const model = row.Model || '';
+      const trim = row.Trim || '';
+      const body = row.BodyClass || '';
+      const drive = row.DriveType || '';
+
+      // Populate hidden + visible fields
+      byId('year').value = year;
+      byId('make').value = row.Make || '';
+      byId('model').value = model;
+      byId('bodyClass').value = body;
+      byId('driveType').value = drive;
+      if(trim && !byId('trim').value) byId('trim').value = trim;
+
+      const chips = [];
+      if(year) chips.push(`<span class="chip">${year}</span>`);
+      if(make) chips.push(`<span class="chip">${row.Make}</span>`);
+      if(model) chips.push(`<span class="chip">${model}</span>`);
+      if(trim) chips.push(`<span class="chip">Trim: ${trim}</span>`);
+      if(body) chips.push(`<span class="chip">${body}</span>`);
+      if(drive) chips.push(`<span class="chip">${drive}</span>`);
+
+      info.innerHTML = chips.join(' ');
+
+      // Guardrail: focus brands
+      const allowed = ['TESLA','RIVIAN','LUCID'];
+      if(make && !allowed.includes(make)){
+        warn.innerHTML = `<span class="alert bad">Heads up: We currently prioritize Tesla, Rivian &amp; Lucid. We can still collect your info, but offers may be slower.</span>`;
+      }else if(make){
+        warn.innerHTML = `<span class="alert good">Great! ${row.Make} is supported.</span>`;
+      }
+    }catch(err){
+      console.error(err);
+      warn.innerHTML = '<span class="alert bad">Couldn’t decode that VIN. Please check and try again.</span>';
+    }finally{
+      decodeBtn.disabled = false;
+      decodeBtn.textContent = 'Decode';
+      updateProgress();
+    }
+  }
+
+  decodeBtn.addEventListener('click', decodeVIN);
+  vinEl.addEventListener('blur', ()=>{
+    if(vinEl.value.trim().length>=11) decodeVIN();
+  });
+
+  // Fake save for later (localStorage)
+  saveBtn.addEventListener('click', ()=>{
+    const payload = collectPayload();
+    localStorage.setItem('onlyev_draft', JSON.stringify(payload));
+    toast('Saved locally. Come back anytime on this device to finish.');
+  });
+  window.addEventListener('load',()=>{
+    const draft = localStorage.getItem('onlyev_draft');
+    if(draft){
+      try {
+        const d = JSON.parse(draft);
+        for(const [k,v] of Object.entries(d)){
+          const el = byId(k);
+          if(el && typeof v === 'string') el.value = v;
+        }
+        // radio restores
+        if(d.persona){
+          const r = form.querySelector(`input[name="persona"][value="${d.persona}"]`);
+          if(r) r.checked = true;
+          dealerExtras.style.display = (d.persona === 'dealer') ? 'block' : 'none';
+        }
+        if(d.lien){
+          const r = form.querySelector(`input[name="lien"][value="${d.lien}"]`);
+          if(r) r.checked = true;
+          payoffWrap.style.display = (d.lien === 'has_loan') ? 'block' : 'none';
+        }
+        if(d.consent) byId('consent').checked = true;
+        updateProgress();
+      }catch{}
+    }
+  });
+
+  function collectPayload(){
+    const get = (id)=> (id==='vin'?vinEl.value:byId(id)?.value || '').trim();
+    const persona = form.querySelector('input[name="persona"]:checked')?.value || '';
+    const lien = form.querySelector('input[name="lien"]:checked')?.value || '';
+    return {
+      vin: get('vin'),
+      year: get('year'),
+      make: get('make'),
+      model: get('model'),
+      trim: get('trim'),
+      bodyClass: get('bodyClass'),
+      driveType: get('driveType'),
+      miles: get('miles'),
+      zip: get('zip'),
+      first: get('first'),
+      last: get('last'),
+      email: get('email'),
+      phone: get('phone'),
+      persona,
+      dealerName: get('dealerName'),
+      lien,
+      payoff: get('payoff'),
+      consent: byId('consent').checked ? 'yes' : 'no',
+      ts: new Date().toISOString(),
+      source: 'onlyev.com/cash-offer'
+    };
+  }
+
+  // Configure where to POST leads
+  // Option A (no backend yet): send to Formspree/Make/Zapier webhook
+  const FORM_ENDPOINT = ''; // e.g., 'https://formspree.io/f/xxxxxx' or your Make/Zapier webhook
+  // Option B: If you later add an /api/leads endpoint, leave empty here and we will POST to /api/leads.
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+    try{
+      // basic validation
+      if(vinEl.value.trim().length < 11) throw new Error('VIN is required.');
+      ['zip','first','last','email','phone'].forEach(id=>{
+        if(!byId(id).value.trim()) throw new Error('Please complete all required fields.');
+      });
+      if(!byId('consent').checked) throw new Error('Please accept the consent box.');
+
+      const payload = collectPayload();
+
+      let endpoint = FORM_ENDPOINT || '/api/leads';
+      const res = await fetch(endpoint, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload),
+      });
+
+      // If no backend exists, the fetch above will likely fail on static hosting.
+      // Gracefully degrade to console logging and success UI.
+      if(!res.ok){
+        console.warn('Lead POST failed or endpoint missing. Payload:', payload);
+        toast('Submitted locally. Backend not connected yet — check console for payload.', true);
+      }else{
+        toast('Thanks! Your info has been sent to our buyer network. Expect a text shortly.');
+      }
+      form.reset();
+      info.innerHTML = '';
+      warn.innerHTML = '';
+      updateProgress();
+    }catch(err){
+      toast(err.message || 'Please check the form and try again.', false, true);
+    }finally{
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Get Cash Offer';
+    }
+  });
+
+  function toast(msg, neutral=false, error=false){
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.position='fixed';
+    t.style.zIndex='9999';
+    t.style.left='50%';
+    t.style.top='20px';
+    t.style.transform='translateX(-50%)';
+    t.style.padding='10px 14px';
+    t.style.border='1px solid ' + (error ? '#3a1d1d' : neutral ? '#2c2c2c' : '#14351c');
+    t.style.background = error ? '#1a1212' : neutral ? '#121212' : '#0f1a12';
+    t.style.color = error ? '#fecaca' : '#a7f3d0';
+    t.style.borderRadius='10px';
+    t.style.boxShadow='0 8px 22px rgba(0,0,0,.35)';
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(), 3600);
+  }
+})();
+</script>
+</body>
+</html>
