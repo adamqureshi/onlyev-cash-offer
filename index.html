@@ -8,6 +8,7 @@
   <style>
     :root{
       --bg:#0b0b0b; --text:#e5e7eb; --muted:#9ca3af; --card:#121212; --input:#1a1a1a; --border:#2b2b2b;
+      /* Accent (change anytime) */
       --accent:#22c55e; --accent-2:#16a34a; /* EV green */
     }
     *{box-sizing:border-box}
@@ -29,7 +30,7 @@
 
     .card{background:linear-gradient(180deg,#141414,#0f0f0f);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.35);padding:18px}
 
-    /* ——— Stepper ——— */
+    /* Stepper */
     .wizard{display:flex;align-items:center;gap:10px;margin-bottom:14px}
     .w-step{display:flex;align-items:center;gap:8px;color:#a1a1aa;font-size:12px}
     .w-num{width:28px;height:28px;border-radius:999px;display:grid;place-items:center;border:1px solid var(--border);background:#101010}
@@ -57,6 +58,11 @@
     .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
     .hidden{display:none}
 
+    .vinMeta{display:flex;gap:10px;align-items:center;margin-top:6px;font-size:12px;color:#cbd5e1}
+    .vinCount{padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:#151515}
+    .vinHelp{font-size:12px;color:#b6beca}
+    .vinWarn{color:#fca5a5}
+
     .footer{margin-top:36px;padding-top:18px;border-top:1px solid #1f1f1f;color:#a1a1aa;font-size:12px}
 
     @media (max-width:980px){.hero{grid-template-columns:1fr}}
@@ -76,11 +82,11 @@
         <h1>Instant Cash Offers for <br/>Tesla, Rivian &amp; Lucid</h1>
         <p class="subtle">Sell your EV fast. Real offers from our nationwide dealer network.</p>
         <ul class="points">
-          <li><span class="dot"></span> <span><b>EV‑specific valuations.</b> We don’t use outdated ICE formulas.</span></li>
+          <li><span class="dot"></span> <span><b>EV-specific valuations.</b> We don’t use outdated ICE formulas.</span></li>
           <li><span class="dot"></span> <span><b>Get an offer in minutes.</b> Most deals close in &lt; 48 hours.</span></li>
           <li><span class="dot"></span> <span><b>True market pricing.</b> Backed by hungry EV buyers across the U.S.</span></li>
         </ul>
-        <div class="alert">Dealers: Have a trade‑in EV? Use the same form and pick <b>“I’m a dealer.”</b></div>
+        <div class="alert">Dealers: Have a trade-in EV? Use the same form and pick <b>“I’m a dealer.”</b></div>
       </div>
 
       <div class="card">
@@ -95,12 +101,18 @@
         <!-- STEP 1: VIN -->
         <section id="step1" class="stack">
           <div class="muted" style="font-weight:700">Step 1 — Enter & decode your VIN</div>
-          <input id="vin" name="vin" type="text" inputmode="text" autocapitalize="characters" minlength="17" maxlength="17" placeholder="Paste a 17‑character VIN" autocomplete="off" required />
+          <input id="vin" name="vin" type="text" inputmode="text" autocapitalize="characters" minlength="17" maxlength="17"
+                 placeholder="Paste a 17-character VIN" autocomplete="off" spellcheck="false" required />
           <button id="decodeBtn" class="btn" type="button">Decode</button>
-          <div class="muted" id="vinHint">Tip: Paste works great — we ignore spaces & dashes. VINs never use I, O, or Q.</div>
+          <div class="vinMeta">
+            <span id="vinCount" class="vinCount">0 / 17</span>
+            <span id="vinHint" class="vinHelp">Tip: We ignore spaces & dashes. VINs never use I, O, or Q.</span>
+          </div>
           <div id="decodeInfo" class="decoded" aria-live="polite"></div>
           <div id="decodeWarn" class="muted"></div>
-          <label class="muted" style="display:flex;gap:8px;align-items:center;margin-top:6px"><input type="checkbox" id="confirmCar" disabled> Yes, this is my EV.</label>
+          <label class="muted" style="display:flex;gap:8px;align-items:center;margin-top:6px">
+            <input type="checkbox" id="confirmCar" disabled> Yes, this is my EV.
+          </label>
           <div style="display:flex;gap:10px;margin-top:8px">
             <button id="next1" class="btn" disabled>Continue</button>
           </div>
@@ -114,7 +126,7 @@
             <input id="last" name="family-name" autocomplete="family-name" type="text" placeholder="Last name" required />
           </div>
           <div class="grid2">
-            <input id="phone" name="tel" autocomplete="tel" type="tel" placeholder="Mobile number (we'll text you)" required />
+            <input id="phone" name="tel" autocomplete="tel" type="tel" placeholder="Mobile number (we’ll text you)" required />
             <input id="email" name="email" autocomplete="email" type="email" placeholder="you@example.com" required />
           </div>
           <input id="zip" name="postal-code" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" placeholder="Vehicle ZIP code" required />
@@ -129,7 +141,7 @@
           <div class="muted" style="font-weight:700">Step 3 — Vehicle details</div>
           <div class="grid2">
             <input id="miles" name="miles" type="number" min="0" step="1" placeholder="Miles (e.g., 24,800)" />
-            <input id="trim" name="trim" type="text" placeholder="Trim (auto‑filled if available)" />
+            <input id="trim" name="trim" type="text" placeholder="Trim (auto-filled if available)" />
           </div>
           <div style="display:flex;gap:10px;margin-top:8px">
             <button class="btn secondary" id="back3" type="button">Back</button>
@@ -176,86 +188,126 @@
   const $ = (id)=>document.getElementById(id);
   const stepEls = [ $('step1'), $('step2'), $('step3'), $('step4') ];
   const wizard = document.getElementById('wizard');
-  let step = 1; // 1..4
+  let step = 1;
 
   const yearNow = document.getElementById('yearNow'); yearNow.textContent = new Date().getFullYear();
 
-  // Util
-  const BAD = /[IOQ]/i; const SAN = s=> (s||'').toUpperCase().replace(/\s|-/g,'');
+  // VIN helpers
+  const BAD = /[IOQ]/i; // forbidden in VINs
+  const SAN = s => (s||'').toUpperCase().replace(/\s|-/g,''); // remove spaces/dashes, uppercase
 
-  function setStep(n){ step = Math.max(1, Math.min(4, n));
+  function setStep(n){
+    step = Math.max(1, Math.min(4, n));
     stepEls.forEach((el,i)=> el.classList.toggle('hidden', (i+1)!==step));
-    // stepper classes
     [...wizard.querySelectorAll('.w-step')].forEach((w,i)=>{
       w.classList.toggle('current', i+1===step);
       w.classList.toggle('done', i+1<step);
     });
-    // focus first input of the section
-    const firstInput = stepEls[step-1].querySelector('input[type="text"],input[type="tel"],input[type="email"],input[type="number"]');
-    if(firstInput) firstInput.focus({preventScroll:true});
+    const first = stepEls[step-1].querySelector('input[type="text"],input[type="tel"],input[type="email"],input[type="number"]');
+    if(first) first.focus({preventScroll:true});
   }
 
-  // ——— STEP 1: VIN + decode ———
-  const vin = $('vin'), decodeBtn = $('decodeBtn'), info = $('decodeInfo'), warn = $('decodeWarn'), confirmCar = $('confirmCar'), next1 = $('next1');
-  function validateVINField(){
-    const v = SAN(vin.value); if(v!==vin.value) vin.value = v;
-    const ok = v.length===17 && !BAD.test(v) && /^[A-Z0-9]+$/.test(v);
-    decodeBtn.disabled = !ok; return ok;
+  // STEP 1
+  const vin = $('vin'), decodeBtn = $('decodeBtn'), vinCount = $('vinCount'),
+        vinHint = $('vinHint'), info = $('decodeInfo'), warn = $('decodeWarn'),
+        confirmCar = $('confirmCar'), next1 = $('next1');
+
+  function updateVINUI(){
+    const v = SAN(vin.value);
+    if(v !== vin.value) vin.value = v;
+    const len = v.length; vinCount.textContent = `${len} / 17`;
+    const ok = len === 17 && !BAD.test(v) && /^[A-Z0-9]+$/.test(v);
+    decodeBtn.disabled = !ok;
+    vinHint.classList.toggle('vinWarn', BAD.test(v));
   }
-  vin.addEventListener('input', ()=>{ validateVINField(); });
-  vin.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); if(validateVINField()) decodeVIN(); }});
-  decodeBtn.addEventListener('click', ()=>{ if(validateVINField()) decodeVIN(); });
+
+  vin.addEventListener('input', ()=>{ updateVINUI(); if(SAN(vin.value).length===17 && !decodeBtn.disabled) decodeVIN(); });
+  vin.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); if(!decodeBtn.disabled) decodeVIN(); }});
+
+  decodeBtn.addEventListener('click', ()=>{ if(!decodeBtn.disabled) decodeVIN(); });
 
   async function decodeVIN(){
-    const v = SAN(vin.value); info.innerHTML=''; warn.textContent=''; confirmCar.checked=false; confirmCar.disabled=true; next1.disabled=true;
-    decodeBtn.disabled = true; decodeBtn.textContent = 'Decoding…';
+    const v = SAN(vin.value);
+    info.innerHTML=''; warn.textContent=''; confirmCar.checked=false; confirmCar.disabled=true; next1.disabled=true;
+    decodeBtn.disabled=true; decodeBtn.textContent='Decoding…';
     try{
       const url = `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${encodeURIComponent(v)}?format=json`;
       const res = await fetch(url); const data = await res.json();
       const row = (data && data.Results && data.Results[0]) || {};
-      const year=row.ModelYear||''; const make=row.Make||''; const model=row.Model||''; const trim=row.Trim||''; const body=row.BodyClass||''; const drive=row.DriveType||'';
+      const year=row.ModelYear||'', make=row.Make||'', model=row.Model||'', trim=row.Trim||'', body=row.BodyClass||'', drive=row.DriveType||'';
       $('year').value=year; $('make').value=make; $('model').value=model; $('bodyClass').value=body; $('driveType').value=drive;
       if(trim && !$('trim').value) $('trim').value=trim;
+
       const chips=[]; if(year) chips.push(`<span class="chip">${year}</span>`); if(make) chips.push(`<span class="chip">${make}</span>`); if(model) chips.push(`<span class="chip">${model}</span>`); if(trim) chips.push(`<span class="chip">Trim: ${trim}</span>`); if(body) chips.push(`<span class="chip">${body}</span>`); if(drive) chips.push(`<span class="chip">${drive}</span>`);
       info.innerHTML = chips.join(' ');
-      if(make){ warn.innerHTML = '<span class="alert good">VIN decoded. Please confirm.</span>'; confirmCar.disabled=false; }
-      else { warn.innerHTML = '<span class="alert bad">Couldn’t decode that VIN. Please check and try again.</span>'; }
-    }catch(e){ console.error(e); warn.innerHTML = '<span class="alert bad">VIN decode failed. Try again.</span>'; }
-    finally{ decodeBtn.disabled=false; decodeBtn.textContent='Decode'; }
+
+      if(make){
+        // Supported brands message
+        if(!['TESLA','RIVIAN','LUCID'].includes(make.toUpperCase())){
+          warn.innerHTML = '<span class="alert bad">Heads up: we prioritize Tesla, Rivian &amp; Lucid. We can still collect your info; offers may be slower.</span>';
+        } else {
+          warn.innerHTML = '<span class="alert good">VIN decoded. Please confirm.</span>';
+        }
+        confirmCar.disabled=false;
+      } else {
+        warn.innerHTML = '<span class="alert bad">Couldn’t decode that VIN. Please check and try again.</span>';
+      }
+    }catch(e){
+      console.error(e);
+      warn.innerHTML = '<span class="alert bad">VIN decode failed. Try again.</span>';
+    }finally{
+      decodeBtn.disabled=false; decodeBtn.textContent='Decode';
+    }
   }
+
   confirmCar.addEventListener('change', ()=>{ next1.disabled = !confirmCar.checked; });
   next1.addEventListener('click', ()=> setStep(2));
 
-  // ——— STEP 2: Contact ———
+  // STEP 2 (Contact)
   $('back2').addEventListener('click', ()=> setStep(1));
   $('next2').addEventListener('click', ()=>{
-    const req=['first','last','phone','email','zip'];
-    for(const id of req){ const el=$(id); if(!el.value.trim()){ el.focus(); return; } }
+    const must=['first','last','phone','email','zip'];
+    for(const id of must){ const el=$(id); if(!el.value.trim()){ el.focus(); return; } }
     setStep(3);
   });
 
-  // ——— STEP 3: Vehicle details ———
+  // STEP 3 (Vehicle)
   $('back3').addEventListener('click', ()=> setStep(2));
   $('next3').addEventListener('click', ()=> setStep(4));
 
-  // ——— STEP 4: Loan / title ———
+  // STEP 4 (Loan/Title)
   const loanRadios = document.querySelectorAll('input[name="lien"]');
   const loanBlock = $('loanBlock');
-  loanRadios.forEach(r=> r.addEventListener('change', ()=>{ loanBlock.classList.toggle('hidden', r.value!=='has_loan' || !r.checked ? document.querySelector('input[name="lien"][value="has_loan"]').checked===false : false ); }));
-  document.querySelectorAll('input[name="knowPayoff"]').forEach(r=> r.addEventListener('change', ()=>{ $('payoff').classList.toggle('hidden', r.value!=='yes'); }));
+  loanRadios.forEach(r=> r.addEventListener('change', ()=>{
+    loanBlock.classList.toggle('hidden', r.value!=='has_loan' || !r.checked ? document.querySelector('input[name="lien"][value="has_loan"]').checked===false : false);
+  }));
+  document.querySelectorAll('input[name="knowPayoff"]').forEach(r=>{
+    r.addEventListener('change', ()=> $('payoff').classList.toggle('hidden', r.value!=='yes'));
+  });
   $('back4').addEventListener('click', ()=> setStep(3));
 
-  // Submit — either send to webhook or log locally for GitHub Pages
-  const FORM_ENDPOINT = '';// e.g. 'https://hook.integromat.com/xxxxx'
-  const THANK_YOU_URL = '';// optional
+  // Submit (GitHub Pages safe)
+  const FORM_ENDPOINT = ''; // set when ready (e.g., to Zapier, Make, or your API)
+  const THANK_YOU_URL = ''; // optional
   $('submitBtn').addEventListener('click', async ()=>{
-    // naive validations
     if(SAN(vin.value).length!==17 || !confirmCar.checked){ setStep(1); return; }
-    const email = $('email').value.trim(); const phone=$('phone').value.replace(/\D/g,'');
-    if(!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) { setStep(2); $('email').focus(); return; }
+    const email=$('email').value.trim(), phone=$('phone').value.replace(/\D/g,'');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ setStep(2); $('email').focus(); return; }
     if(phone.length<10){ setStep(2); $('phone').focus(); return; }
 
-    const payload = collectPayload();
+    const payload = {
+      vin: SAN(vin.value), confirmCar: confirmCar.checked?'yes':'no',
+      year:$('year').value, make:$('make').value, model:$('model').value, trim:$('trim').value, bodyClass:$('bodyClass').value, driveType:$('driveType').value,
+      miles:$('miles').value, zip:$('zip').value, first:$('first').value, last:$('last').value,
+      email, phone:$('phone').value,
+      lien:(document.querySelector('input[name="lien"]:checked')||{}).value||'',
+      bank:$('bank').value,
+      knowPayoff:(document.querySelector('input[name="knowPayoff"]:checked')||{}).value||'',
+      payoff:$('payoff').value,
+      ts:new Date().toISOString(), source:'onlyev.com/cash-offer', referrer:document.referrer
+    };
+
+    const btn=$('submitBtn'); btn.disabled=true; btn.textContent='Submitting…';
     try{
       if(FORM_ENDPOINT){
         const res = await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -266,33 +318,29 @@
         toast('Saved locally. Add a webhook URL to send to your buyers.', true);
       }
       if(THANK_YOU_URL) setTimeout(()=> location.href = THANK_YOU_URL, 600);
-    }catch(e){ toast('Submit failed. Try again.', false, true); }
+    }catch(e){
+      toast('Submit failed. Try again.', false, true);
+    }finally{
+      btn.disabled=false; btn.textContent='Get Cash Offer';
+    }
   });
 
-  function collectPayload(){
-    const persona='private'; // simplified here; could add persona toggle back if needed
-    const lien=(document.querySelector('input[name="lien"]:checked')||{}).value||'';
-    const knowPayoff=(document.querySelector('input[name="knowPayoff"]:checked')||{}).value||'';
-    return {
-      vin:SAN($('vin').value), confirmCar: $('confirmCar').checked?'yes':'no',
-      year:$('year').value, make:$('make').value, model:$('model').value, trim:$('trim').value, bodyClass:$('bodyClass').value, driveType:$('driveType').value,
-      miles:$('miles').value, zip:$('zip').value, first:$('first').value, last:$('last').value, email:$('email').value, phone:$('phone').value,
-      persona, lien, bank:$('bank').value, knowPayoff, payoff:$('payoff').value,
-      ts:new Date().toISOString(), source:'onlyev.com/cash-offer', referrer:document.referrer
-    };
-  }
-
   function toast(msg, neutral=false, error=false){
-    const t=document.createElement('div'); t.textContent=msg; t.style.position='fixed'; t.style.zIndex='9999'; t.style.left='50%'; t.style.top='20px'; t.style.transform='translateX(-50%)';
-    t.style.padding='10px 14px'; t.style.border='1px solid '+(error?'#3a1d1d':neutral?'#2c2c2c':'#14351c'); t.style.background=error?'#1a1212':neutral?'#121212':'#0f1a12'; t.style.color=error?'#fecaca':'#a7f3d0';
-    t.style.borderRadius='10px'; t.style.boxShadow='0 8px 22px rgba(0,0,0,.35)'; document.body.appendChild(t); setTimeout(()=>t.remove(), 3600);
+    const t=document.createElement('div');
+    t.textContent=msg; t.style.position='fixed'; t.style.zIndex='9999'; t.style.left='50%'; t.style.top='20px'; t.style.transform='translateX(-50%)';
+    t.style.padding='10px 14px'; t.style.border='1px solid '+(error?'#3a1d1d':neutral?'#2c2c2c':'#14351c');
+    t.style.background=error?'#1a1212':neutral?'#121212':'#0f1a12';
+    t.style.color=error?'#fecaca':'#a7f3d0'; t.style.borderRadius='10px'; t.style.boxShadow='0 8px 22px rgba(0,0,0,.35)';
+    document.body.appendChild(t); setTimeout(()=>t.remove(), 3600);
   }
 
   setStep(1);
+  updateVINUI();
 })();
 </script>
 </body>
 </html>
+
 
 
 
