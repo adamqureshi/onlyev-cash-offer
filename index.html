@@ -6,7 +6,11 @@
   <title>OnlyEV — Cash Offer for Your EV</title>
   <meta name="description" content="Get a fast cash offer for your Tesla, Rivian, or Lucid. Enter your VIN, confirm details, and receive dealer offers from OnlyEV." />
   <style>
-    :root{ --bg:#0b0b0b; --text:#e5e7eb; --muted:#9ca3af; --card:#121212; --input:#1a1a1a; --border:#2b2b2b; --accent:#0ea5e9; --accent-2:#0894d3; }
+    :root{
+      --bg:#0b0b0b; --text:#e5e7eb; --muted:#9ca3af; --card:#121212; --input:#1a1a1a; --border:#2b2b2b;
+      /* Accent (change anytime) */
+      --accent:#22c55e; --accent-2:#16a34a; /* EV green */
+    }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{margin:0;background:radial-gradient(1200px 600px at 80% -10%, #171717, #0c0c0c 60%), #0b0b0b;color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial}
@@ -16,35 +20,52 @@
     .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px}
     .brand-badge{width:28px;height:28px;border-radius:7px;background:conic-gradient(from 180deg, #777 0 25%, #999 0 50%, #777 0 75%, #aaa 0 100%);box-shadow:0 0 0 2px #222 inset}
     .pill{display:inline-flex;gap:8px;align-items:center;font-size:12px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:#cbd5e1;background:#0f0f0f}
+
     .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:start;margin-top:10px}
     .hero h1{font-size:44px;line-height:1.05;margin:0 0 12px}
     .subtle{color:#b3b9c3;font-size:15px}
     .points{margin:22px 0 14px;padding-left:0;list-style:none}
     .points li{margin:10px 0;display:flex;gap:10px;align-items:flex-start}
     .points .dot{width:8px;height:8px;margin-top:7px;border-radius:50%;background:linear-gradient(145deg,#6b7280,#9ca3af)}
-    .card{background:linear-gradient(180deg,#141414,#0f0f0f);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.35);padding:18px}
-    .vinBox{display:flex;gap:10px;margin:12px 0 18px}
+
+    .card{background:linear-gradient(180deg,#141414,#0f0f0f);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.35);padding:20px}
+    .vinBox{display:grid;grid-template-columns:1fr auto;gap:10px;margin:12px 0 10px}
+    .vinLarge{font-size:18px;padding:16px 14px}
+    .vinHelp{font-size:12px;color:#b6beca;margin-top:4px}
+    .vinMeta{display:flex;gap:10px;align-items:center;margin-top:6px;font-size:12px;color:#cbd5e1}
+    .vinCount{padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:#151515}
+    .vinWarn{color:#fca5a5}
+
     input,select,button,textarea{font:inherit;color:var(--text)}
     input[type="text"],input[type="email"],input[type="tel"],input[type="number"],select{width:100%;padding:12px 12px;border-radius:10px;border:1px solid var(--border);background:var(--input);outline:none}
-    input:focus,select:focus{border-color:#3a3a3a;box-shadow:0 0 0 3px rgba(14,165,233,.15)}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 16px;border-radius:10px;border:1px solid transparent;background:linear-gradient(180deg,var(--accent),var(--accent-2) 70%);color:#001018;font-weight:800;cursor:pointer}
+    input:focus,select:focus{border-color:#3a3a3a;box-shadow:0 0 0 3px rgba(34,197,94,.18)}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:10px;border:1px solid transparent;background:linear-gradient(180deg,var(--accent),var(--accent-2) 70%);color:#001008;font-weight:800;cursor:pointer}
     .btn.secondary{background:#151515;color:#d1d5db;border-color:#2b2b2b}
     .btn:disabled{opacity:.6;cursor:not-allowed}
+
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
     .muted{color:#c6cbd2;font-size:13px}
-    .decoded{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    .decoded{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
     .chip{font-size:12px;padding:5px 8px;border:1px solid var(--border);border-radius:999px;background:#121212}
     .alert{padding:10px 12px;border-radius:10px;background:#121212;border:1px solid var(--border)}
     .alert.bad{border-color:#3a1d1d;background:#171213;color:#fca5a5}
     .alert.good{border-color:#14351c;background:#0f1a12;color:#bbf7d0}
     .progress{height:8px;width:100%;border-radius:999px;background:#151515;border:1px solid #262626;overflow:hidden}
-    .progress>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#7dd3fc);transition:width .3s ease}
+    .progress>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#86efac);transition:width .3s ease}
     .footer{margin-top:36px;padding-top:18px;border-top:1px solid #1f1f1f;color:#a1a1aa;font-size:12px}
     .disclaimer{font-size:12px;color:#9ca3af;margin-top:8px}
+    .hidden{display:none}
+
     @media (max-width:980px){.hero{grid-template-columns:1fr}}
     @media (max-width:720px){.grid3{grid-template-columns:1fr 1fr}}
-    @media (max-width:520px){.hero h1{font-size:34px}.grid2,.grid3{grid-template-columns:1fr}}
+    @media (max-width:520px){
+      .hero h1{font-size:32px}
+      .card{padding:18px}
+      .grid2,.grid3{grid-template-columns:1fr}
+      .btn{padding:14px 16px}
+    }
   </style>
 </head>
 <body>
@@ -59,109 +80,122 @@
         <h1>Instant Cash Offers for <br/>Tesla, Rivian &amp; Lucid</h1>
         <p class="subtle">Sell your EV fast. Real offers from our nationwide dealer network.</p>
         <ul class="points">
-          <li><span class="dot"></span> <span><b>EV‑specific valuations.</b> We don’t use outdated ICE formulas.</span></li>
+          <li><span class="dot"></span> <span><b>EV-specific valuations.</b> We don’t use outdated ICE formulas.</span></li>
           <li><span class="dot"></span> <span><b>Get an offer in minutes.</b> Most deals close in &lt; 48 hours.</span></li>
           <li><span class="dot"></span> <span><b>True market pricing.</b> Backed by hungry EV buyers across the U.S.</span></li>
         </ul>
-        <div class="alert">Dealers: Have a trade‑in EV? Use the same form and pick <b>“I’m a dealer.”</b></div>
+        <div class="alert">Dealers: Have a trade-in EV? Use the same form and pick <b>“I’m a dealer.”</b></div>
       </div>
 
       <div class="card">
-        <div class="muted" style="font-weight:700;margin-bottom:6px">Start with your VIN</div>
+        <!-- STEP 1: VIN -->
+        <div class="muted" style="font-weight:700;margin-bottom:6px">Step 1 — Enter your VIN</div>
         <div class="vinBox">
-          <input id="vin" name="vin" type="text" inputmode="latin" minlength="11" maxlength="17" placeholder="Enter a 17‑character VIN" autocomplete="off" required />
-          <button id="decodeBtn" class="btn" type="button" aria-label="Decode VIN">Decode</button>
+          <input id="vin" name="vin" class="vinLarge"
+                 type="text" inputmode="text" autocapitalize="characters" autocomplete="off"
+                 spellcheck="false" minlength="11" maxlength="17"
+                 placeholder="Paste a 17-character VIN" required />
+          <button id="decodeBtn" class="btn" type="button" aria-label="Decode VIN" disabled>Decode</button>
+        </div>
+        <div class="vinMeta">
+          <span id="vinCount" class="vinCount">0 / 17</span>
+          <span id="vinHint" class="vinHelp">Tip: You can paste; we ignore spaces & dashes. VINs never use I, O, or Q.</span>
         </div>
         <div id="decodeInfo" class="decoded" aria-live="polite"></div>
         <div id="decodeWarn" class="muted" style="margin-top:4px"></div>
 
         <hr style="border:0;border-top:1px solid var(--border);margin:16px 0">
 
-        <form id="leadForm" novalidate>
-          <div class="grid2">
-            <div>
-              <label class="muted" for="miles">Miles</label>
-              <input id="miles" name="miles" type="number" min="0" step="1" placeholder="e.g., 24,800" />
-            </div>
-            <div>
-              <label class="muted" for="trim">Trim</label>
-              <input id="trim" name="trim" type="text" placeholder="Auto‑filled if available" />
-            </div>
-          </div>
-
-          <div class="grid3" style="margin-top:12px">
-            <div>
-              <label class="muted" for="zip">Vehicle Location ZIP</label>
-              <input id="zip" name="postal-code" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" placeholder="ZIP code" required />
-            </div>
-            <div>
-              <label class="muted" for="first">First Name</label>
-              <input id="first" name="given-name" autocomplete="given-name" type="text" placeholder="First name" required />
-            </div>
-            <div>
-              <label class="muted" for="last">Last Name</label>
-              <input id="last" name="family-name" autocomplete="family-name" type="text" placeholder="Last name" required />
-            </div>
-          </div>
-
-          <div class="grid2" style="margin-top:12px">
-            <div>
-              <label class="muted" for="email">Email</label>
-              <input id="email" name="email" autocomplete="email" type="email" placeholder="you@example.com" required />
-            </div>
-            <div>
-              <label class="muted" for="phone">Phone</label>
-              <input id="phone" name="tel" autocomplete="tel" type="tel" placeholder="(555) 555-5555" required />
-            </div>
-          </div>
-
-          <div class="grid2" style="margin-top:12px">
-            <div>
-              <label class="muted">Who are you?</label>
-              <div style="display:flex;gap:12px;margin-top:4px">
-                <label><input type="radio" name="persona" value="dealer"> I’m a dealer</label>
-                <label><input type="radio" name="persona" value="private" checked> This is my personal car</label>
+        <!-- STEP 2: details (hidden until VIN decodes) -->
+        <div id="detailsSection" class="hidden">
+          <div class="muted" style="font-weight:700;margin-bottom:6px">Step 2 — Vehicle & Contact</div>
+          <form id="leadForm" novalidate>
+            <div class="grid2">
+              <div>
+                <label class="muted" for="miles">Miles</label>
+                <input id="miles" name="miles" type="number" min="0" step="1" placeholder="e.g., 24,800" />
+              </div>
+              <div>
+                <label class="muted" for="trim">Trim</label>
+                <input id="trim" name="trim" type="text" placeholder="Auto-filled if available" />
               </div>
             </div>
-            <div id="dealerExtras" style="display:none">
-              <label class="muted" for="dealerName">Dealership (optional)</label>
-              <input id="dealerName" name="dealer-name" type="text" placeholder="Dealer name" />
-            </div>
-          </div>
 
-          <div class="grid2" style="margin-top:8px">
-            <div>
-              <label class="muted">Title / Loan Status</label>
-              <div style="display:flex;gap:12px;margin-top:4px">
-                <label><input type="radio" name="lien" value="title_in_hand" checked> Title in hand</label>
-                <label><input type="radio" name="lien" value="has_loan"> I have a loan</label>
+            <div class="grid3" style="margin-top:12px">
+              <div>
+                <label class="muted" for="zip">Vehicle Location ZIP</label>
+                <input id="zip" name="postal-code" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" placeholder="ZIP code" required />
+              </div>
+              <div>
+                <label class="muted" for="first">First Name</label>
+                <input id="first" name="given-name" autocomplete="given-name" type="text" placeholder="First name" required />
+              </div>
+              <div>
+                <label class="muted" for="last">Last Name</label>
+                <input id="last" name="family-name" autocomplete="family-name" type="text" placeholder="Last name" required />
               </div>
             </div>
-            <div id="payoffWrap" style="display:none">
-              <label class="muted" for="payoff">Approx. Loan Payoff (optional)</label>
-              <input id="payoff" name="loan-payoff" type="number" min="0" step="1" placeholder="e.g., 27500" />
+
+            <div class="grid2" style="margin-top:12px">
+              <div>
+                <label class="muted" for="email">Email</label>
+                <input id="email" name="email" autocomplete="email" type="email" placeholder="you@example.com" required />
+              </div>
+              <div>
+                <label class="muted" for="phone">Phone</label>
+                <input id="phone" name="tel" autocomplete="tel" type="tel" placeholder="(555) 555-5555" required />
+              </div>
             </div>
-          </div>
 
-          <div style="margin:12px 0 8px">
-            <label class="muted"><input id="consent" type="checkbox" required /> I agree to be contacted about my offer and accept the OnlyEV <a href="#">terms</a> &amp; <a href="#">privacy</a>. No spam.</label>
-          </div>
+            <div class="grid2" style="margin-top:12px">
+              <div>
+                <label class="muted">Who are you?</label>
+                <div style="display:flex;gap:12px;margin-top:4px">
+                  <label><input type="radio" name="persona" value="dealer"> I’m a dealer</label>
+                  <label><input type="radio" name="persona" value="private" checked> This is my personal car</label>
+                </div>
+              </div>
+              <div id="dealerExtras" style="display:none">
+                <label class="muted" for="dealerName">Dealership (optional)</label>
+                <input id="dealerName" name="dealer-name" type="text" placeholder="Dealer name" />
+              </div>
+            </div>
 
-          <div class="progress" aria-label="Form completion"><i id="progress"></i></div>
+            <div class="grid2" style="margin-top:8px">
+              <div>
+                <label class="muted">Title / Loan Status</label>
+                <div style="display:flex;gap:12px;margin-top:4px">
+                  <label><input type="radio" name="lien" value="title_in_hand" checked> Title in hand</label>
+                  <label><input type="radio" name="lien" value="has_loan"> I have a loan</label>
+                </div>
+              </div>
+              <div id="payoffWrap" style="display:none">
+                <label class="muted" for="payoff">Approx. Loan Payoff (optional)</label>
+                <input id="payoff" name="loan-payoff" type="number" min="0" step="1" placeholder="e.g., 27500" />
+              </div>
+            </div>
 
-          <div style="display:flex;gap:12px;align-items:center;margin-top:14px">
-            <button id="submitBtn" class="btn" type="submit">Get Cash Offer</button>
-            <button id="saveBtn" class="btn secondary" type="button">Save &amp; finish later</button>
-          </div>
+            <div style="margin:12px 0 8px">
+              <label class="muted"><input id="consent" type="checkbox" required /> I agree to be contacted about my offer and accept the OnlyEV <a href="#">terms</a> &amp; <a href="#">privacy</a>. No spam.</label>
+            </div>
 
-          <div class="disclaimer">Supported today: Tesla, Rivian, Lucid. If your EV is another make, we’ll still try to route it to buyers—offers may take longer.</div>
+            <div class="progress" aria-label="Form completion"><i id="progress"></i></div>
 
-          <input type="hidden" id="year" name="year">
-          <input type="hidden" id="make" name="make">
-          <input type="hidden" id="model" name="model">
-          <input type="hidden" id="bodyClass" name="bodyClass">
-          <input type="hidden" id="driveType" name="driveType">
-        </form>
+            <div style="display:flex;gap:12px;align-items:center;margin-top:14px">
+              <button id="submitBtn" class="btn" type="submit">Get Cash Offer</button>
+              <button id="saveBtn" class="btn secondary" type="button">Save &amp; finish later</button>
+            </div>
+
+            <div class="disclaimer">Supported today: Tesla, Rivian, Lucid. If your EV is another make, we’ll still try to route it to buyers—offers may take longer.</div>
+
+            <!-- hidden fields from VIN decode -->
+            <input type="hidden" id="year" name="year">
+            <input type="hidden" id="make" name="make">
+            <input type="hidden" id="model" name="model">
+            <input type="hidden" id="bodyClass" name="bodyClass">
+            <input type="hidden" id="driveType" name="driveType">
+          </form>
+        </div>
       </div>
     </section>
 
@@ -170,103 +204,183 @@
 
 <script>
 (function(){
-  const byId = (id)=>document.getElementById(id);
-  const vinEl = byId('vin'); const decodeBtn = byId('decodeBtn');
-  const info = byId('decodeInfo'); const warn = byId('decodeWarn');
-  const form = byId('leadForm'); const progressBar = byId('progress');
-  const submitBtn = byId('submitBtn'); const saveBtn = byId('saveBtn');
-  const payoffWrap = byId('payoffWrap'); const dealerExtras = byId('dealerExtras');
-  byId('yearNow').textContent = new Date().getFullYear();
+  const $ = (id)=>document.getElementById(id);
+  const vinEl = $('vin'), decodeBtn = $('decodeBtn'), decodeInfo = $('decodeInfo'), decodeWarn = $('decodeWarn');
+  const details = $('detailsSection'), dealerExtras = $('dealerExtras'), payoffWrap = $('payoffWrap');
+  const progress = $('progress'), yearNow = $('yearNow'); yearNow.textContent = new Date().getFullYear();
 
-  // Capture UTM & referrer
+  // Capture UTM & referrer for the payload
   const urlParams = new URLSearchParams(location.search);
   const utm = Object.fromEntries([...urlParams.entries()].filter(([k])=>k.startsWith('utm_')));
 
-  // Toggles
-  form.addEventListener('change', (e)=>{
-    if(e.target.name === 'persona') dealerExtras.style.display = (e.target.value === 'dealer') ? 'block' : 'none';
-    if(e.target.name === 'lien') payoffWrap.style.display = (e.target.value === 'has_loan') ? 'block' : 'none';
-    updateProgress();
+  // VIN helpers
+  const BAD = /[IOQ]/i;                    // never valid in VINs
+  const SAN = s => s.toUpperCase().replace(/\s|-/g,''); // strip spaces/dashes, uppercase
+
+  function setVIN(v){ const cleaned = SAN(v); if (vinEl.value !== cleaned) vinEl.value = cleaned; return cleaned; }
+  function updateVINUI(){
+    const v = setVIN(vinEl.value); const len = v.length;
+    $('vinCount').textContent = `${len} / 17`;
+    const ok = len === 17 && !BAD.test(v) && /^[A-Z0-9]+$/.test(v);
+    decodeBtn.disabled = !ok;
+    $('vinHint').classList.toggle('vinWarn', BAD.test(v));
+  }
+
+  vinEl.addEventListener('input', ()=>{ updateVINUI(); if(vinEl.value.length===17 && !decodeBtn.disabled) decodeVIN(); });
+  vinEl.addEventListener('paste', e=>{ requestAnimationFrame(updateVINUI); }); // sanitize after paste
+  vinEl.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); if(!decodeBtn.disabled) decodeVIN(); }});
+
+  // Show/hide conditional sections in Step 2
+  document.addEventListener('change', (e)=>{
+    if(e.target.name==='persona') dealerExtras.style.display = (e.target.value==='dealer') ? 'block' : 'none';
+    if(e.target.name==='lien') payoffWrap.style.display = (e.target.value==='has_loan') ? 'block' : 'none';
+    if($('leadForm')) updateProgress();
   });
 
-  function req(){ return [vinEl, byId('zip'), byId('first'), byId('last'), byId('email'), byId('phone'), byId('consent')]; }
+  // Progress bar — counts core required fields
+  function req(){ return [vinEl, $('zip'), $('first'), $('last'), $('email'), $('phone'), $('consent')]; }
   function updateProgress(){
     const items = req(); let filled = 0;
-    items.forEach(el=>{ if(el.type==='checkbox'){ if(el.checked) filled++; } else if(el.value.trim()) filled++; });
-    progressBar.style.width = Math.min(100, Math.round((filled/items.length)*100)) + '%';
+    items.forEach(el => { if(!el) return; if(el.type==='checkbox'){ if(el.checked) filled++; } else if(el.value && el.value.trim()) filled++; });
+    progress.style.width = Math.min(100, Math.round((filled/items.length)*100)) + '%';
   }
-  ['input','change','keyup','blur'].forEach(evt=>form.addEventListener(evt, updateProgress));
-  vinEl.addEventListener('input', ()=>{ updateProgress(); if(vinEl.value.trim().length === 17) decodeVIN(); });
-  vinEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ e.preventDefault(); decodeVIN(); }});
 
   async function decodeVIN(){
-    const raw = vinEl.value.trim().toUpperCase(); info.innerHTML=''; warn.textContent='';
-    if(raw.length < 11){ warn.textContent = 'Enter a complete VIN (17 characters preferred).'; return; }
+    const v = setVIN(vinEl.value);
+    decodeInfo.innerHTML = ''; decodeWarn.innerHTML = '';
+
+    if(v.length !== 17){ decodeWarn.textContent = 'VIN must be 17 characters.'; return; }
+    if(BAD.test(v)){ decodeWarn.innerHTML = '<span class="alert bad">VIN cannot contain I, O, or Q.</span>'; return; }
+
     decodeBtn.disabled = true; decodeBtn.textContent = 'Decoding…';
     try{
-      const url = `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${encodeURIComponent(raw)}?format=json`;
+      const url = `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${encodeURIComponent(v)}?format=json`;
       const res = await fetch(url); const data = await res.json();
       const row = (data && data.Results && data.Results[0]) || {};
-      const year=row.ModelYear||''; const make=(row.Make||'').toUpperCase(); const model=row.Model||''; const trim=row.Trim||''; const body=row.BodyClass||''; const drive=row.DriveType||'';
-      byId('year').value=year; byId('make').value=row.Make||''; byId('model').value=model; byId('bodyClass').value=body; byId('driveType').value=drive;
-      if(trim && !byId('trim').value) byId('trim').value = trim;
-      const chips=[]; if(year) chips.push(`<span class="chip">${year}</span>`); if(make) chips.push(`<span class="chip">${row.Make}</span>`); if(model) chips.push(`<span class="chip">${model}</span>`); if(trim) chips.push(`<span class="chip">Trim: ${trim}</span>`); if(body) chips.push(`<span class="chip">${body}</span>`); if(drive) chips.push(`<span class="chip">${drive}</span>`);
-      info.innerHTML = chips.join(' ');
-      const allowed=['TESLA','RIVIAN','LUCID'];
-      if(make && !allowed.includes(make)) warn.innerHTML = `<span class="alert bad">Heads up: We prioritize Tesla, Rivian &amp; Lucid. We can still collect your info, but offers may be slower.</span>`;
-      else if(make) warn.innerHTML = `<span class="alert good">Great! ${row.Make} is supported.</span>`;
-    }catch(err){ console.error(err); warn.innerHTML = '<span class="alert bad">Couldn’t decode that VIN. Please check and try again.</span>'; }
-    finally{ decodeBtn.disabled=false; decodeBtn.textContent='Decode'; updateProgress(); }
-  }
+      const year=row.ModelYear||'', make=row.Make||'', model=row.Model||'', trim=row.Trim||'', body=row.BodyClass||'', drive=row.DriveType||'';
 
-  // Save draft locally
-  saveBtn.addEventListener('click', ()=>{ localStorage.setItem('onlyev_draft', JSON.stringify(collectPayload())); toast('Saved locally.'); });
-  window.addEventListener('load',()=>{ const draft=localStorage.getItem('onlyev_draft'); if(draft){ try{ const d=JSON.parse(draft); for(const [k,v] of Object.entries(d)){ const el=byId(k); if(el && typeof v==='string') el.value=v; } if(d.persona){ const r=form.querySelector(`input[name="persona"][value="${d.persona}"]`); if(r) r.checked=true; dealerExtras.style.display=(d.persona==='dealer')?'block':'none'; } if(d.lien){ const r2=form.querySelector(`input[name="lien"][value="${d.lien}"]`); if(r2) r2.checked=true; payoffWrap.style.display=(d.lien==='has_loan')?'block':'none'; } if(d.consent==='yes') byId('consent').checked=true; updateProgress(); }catch{} } });
+      // Fill hidden fields + optional Trim
+      $('year').value=year; $('make').value=make; $('model').value=model; $('bodyClass').value=body; $('driveType').value=drive;
+      if(trim && !$('trim').value) $('trim').value = trim;
 
-  function collectPayload(){
-    const get=(id)=> (id==='vin'?vinEl.value:byId(id)?.value||'').trim();
-    const persona=form.querySelector('input[name="persona"]:checked')?.value||'';
-    const lien=form.querySelector('input[name="lien"]:checked')?.value||'';
-    return { vin:get('vin'), year:get('year'), make:get('make'), model:get('model'), trim:get('trim'), bodyClass:get('bodyClass'), driveType:get('driveType'), miles:get('miles'), zip:get('zip'), first:get('first'), last:get('last'), email:get('email'), phone:get('phone'), persona, dealerName:get('dealerName'), lien, payoff:get('payoff'), consent: byId('consent').checked ? 'yes' : 'no', ts:new Date().toISOString(), source:'onlyev.com/cash-offer', utm, referrer:document.referrer };
-  }
+      // Chips
+      const chips = [];
+      if(year) chips.push(`<span class="chip">${year}</span>`);
+      if(make) chips.push(`<span class="chip">${make}</span>`);
+      if(model) chips.push(`<span class="chip">${model}</span>`);
+      if(trim) chips.push(`<span class="chip">Trim: ${trim}</span>`);
+      if(body) chips.push(`<span class="chip">${body}</span>`);
+      if(drive) chips.push(`<span class="chip">${drive}</span>`);
+      decodeInfo.innerHTML = chips.join(' ');
 
-  function basicEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-
-  // Safer for GitHub Pages: if FORM_ENDPOINT is empty, we don't POST (avoids 404/CORS)
-  const FORM_ENDPOINT = '';
-  const THANK_YOU_URL = '';
-
-  form.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    try{
-      if(vinEl.value.trim().length < 11) throw new Error('VIN is required.');
-      ['zip','first','last','email','phone','consent'].forEach(id=>{ const el=byId(id); if(el.type==='checkbox'){ if(!el.checked) throw new Error('Please accept the terms.'); } else if(!el.value.trim()) throw new Error('Please complete all required fields.'); });
-      if(!basicEmail(byId('email').value.trim())) throw new Error('Please enter a valid email.');
-      if(byId('phone').value.replace(/\D/g,'').length < 10) throw new Error('Please enter a valid phone number.');
-
-      const payload = collectPayload();
-      submitBtn.disabled=true; submitBtn.textContent='Submitting…';
-
-      if(FORM_ENDPOINT){
-        const res = await fetch(FORM_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-        if(!res.ok) throw new Error('Submission failed. Try again.');
-        toast('Thanks! Expect a text shortly.');
-      }else{
-        console.log('Lead payload (no endpoint set):', payload);
-        toast('Saved locally. Add a webhook URL to send to your buyers.', true);
+      const allow = ['TESLA','RIVIAN','LUCID'];
+      if(make && !allow.includes(make.toUpperCase())){
+        decodeWarn.innerHTML = '<span class="alert bad">Heads up: we prioritize Tesla, Rivian &amp; Lucid. We can still collect your info; offers may be slower.</span>';
+      } else if(make){
+        decodeWarn.innerHTML = `<span class="alert good">Great! ${make} is supported.</span>`;
       }
 
-      if(THANK_YOU_URL){ setTimeout(()=> location.href = THANK_YOU_URL, 600); }
-      form.reset(); info.innerHTML=''; warn.innerHTML=''; updateProgress();
-    }catch(err){ toast(err.message || 'Please check the form and try again.', false, true); }
-    finally{ submitBtn.disabled=false; submitBtn.textContent='Get Cash Offer'; }
+      // Reveal Step 2 + scroll into view
+      details.classList.remove('hidden');
+      setTimeout(()=>details.scrollIntoView({behavior:'smooth', block:'start'}), 150);
+    }catch(err){
+      console.error(err);
+      decodeWarn.innerHTML = '<span class="alert bad">Couldn’t decode that VIN. Please check and try again.</span>';
+    }finally{
+      decodeBtn.disabled = false; decodeBtn.textContent = 'Decode';
+      if($('leadForm')) updateProgress();
+    }
+  }
+  decodeBtn.addEventListener('click', decodeVIN);
+
+  // Save draft locally
+  const saveBtn = $('saveBtn');
+  if(saveBtn){ saveBtn.addEventListener('click', ()=>{ localStorage.setItem('onlyev_draft', JSON.stringify(collectPayload())); toast('Saved locally.'); }); }
+
+  // Restore draft (if any)
+  window.addEventListener('load', ()=>{
+    updateVINUI();
+    const draft = localStorage.getItem('onlyev_draft');
+    if(!draft) return;
+    try{
+      const d = JSON.parse(draft);
+      // if user already started Step 2 before
+      if(d.zip !== undefined) details.classList.remove('hidden');
+      ['vin','zip','first','last','email','phone','miles','trim','dealerName','payoff'].forEach(id=>{ if(d[id]) { const el=$(id); if(el) el.value=d[id]; }});
+      if(d.persona){ const r=document.querySelector(`input[name="persona"][value="${d.persona}"]`); if(r) r.checked=true; dealerExtras.style.display=(d.persona==='dealer')?'block':'none'; }
+      if(d.lien){ const r2=document.querySelector(`input[name="lien"][value="${d.lien}"]`); if(r2) r2.checked=true; payoffWrap.style.display=(d.lien==='has_loan')?'block':'none'; }
+      if(d.consent==='yes' && $('consent')) $('consent').checked=true;
+      updateProgress();
+    }catch{}
+  });
+
+  function collectPayload(){
+    const get = id => $(id) ? (id==='vin'?SAN($(id).value):$(id).value || '').trim() : '';
+    const persona = (document.querySelector('input[name="persona"]:checked')||{}).value || '';
+    const lien = (document.querySelector('input[name="lien"]:checked')||{}).value || '';
+    return {
+      vin:get('vin'), year:get('year'), make:get('make'), model:get('model'), trim:get('trim'),
+      bodyClass:get('bodyClass'), driveType:get('driveType'),
+      miles:get('miles'), zip:get('zip'), first:get('first'), last:get('last'),
+      email:get('email'), phone:get('phone'),
+      persona, dealerName:get('dealerName'), lien, payoff:get('payoff'),
+      consent: ($('consent') && $('consent').checked) ? 'yes' : 'no',
+      ts:new Date().toISOString(), source:'onlyev.com/cash-offer', utm, referrer:document.referrer
+    };
+  }
+
+  function validEmail(v){ return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v); }
+
+  // IMPORTANT: set this when you're ready to send leads somewhere.
+  const FORM_ENDPOINT = '';     // e.g. 'https://hook.integromat.com/xxxxx'
+  const THANK_YOU_URL = '';     // optional redirect after submit
+
+  document.addEventListener('submit', async (e)=>{
+    if(e.target && e.target.id==='leadForm'){
+      e.preventDefault();
+      try{
+        if(SAN(vinEl.value).length !== 17) throw new Error('Enter and decode a full 17-char VIN first.');
+        ['zip','first','last','email','phone','consent'].forEach(id=>{
+          const el=$(id);
+          if(el.type==='checkbox'){ if(!el.checked) throw new Error('Please accept the terms.'); }
+          else if(!el.value.trim()) throw new Error('Please complete all required fields.');
+        });
+        if(!validEmail($('email').value.trim())) throw new Error('Please enter a valid email.');
+        if($('phone').value.replace(/\\D/g,'').length < 10) throw new Error('Please enter a valid phone number.');
+
+        const payload = collectPayload();
+        $('submitBtn').disabled = true; $('submitBtn').textContent = 'Submitting…';
+
+        if(FORM_ENDPOINT){
+          const res = await fetch(FORM_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+          if(!res.ok) throw new Error('Submission failed. Try again.');
+          toast('Thanks! Expect a text shortly.');
+        }else{
+          console.log('Lead payload (no endpoint set):', payload);
+          toast('Saved locally. Add a webhook URL to send to your buyers.', true);
+        }
+
+        if(THANK_YOU_URL){ setTimeout(()=> location.href = THANK_YOU_URL, 600); }
+        e.target.reset(); decodeInfo.innerHTML=''; decodeWarn.innerHTML=''; updateProgress();
+      }catch(err){
+        toast(err.message || 'Please check the form and try again.', false, true);
+      }finally{
+        $('submitBtn').disabled = false; $('submitBtn').textContent = 'Get Cash Offer';
+      }
+    }
   });
 
   function toast(msg, neutral=false, error=false){
-    const t=document.createElement('div'); t.textContent=msg; t.style.position='fixed'; t.style.zIndex='9999'; t.style.left='50%'; t.style.top='20px'; t.style.transform='translateX(-50%)'; t.style.padding='10px 14px'; t.style.border='1px solid '+(error?'#3a1d1d':neutral?'#2c2c2c':'#14351c'); t.style.background=error?'#1a1212':neutral?'#121212':'#0f1a12'; t.style.color=error?'#fecaca':'#a7f3d0'; t.style.borderRadius='10px'; t.style.boxShadow='0 8px 22px rgba(0,0,0,.35)'; document.body.appendChild(t); setTimeout(()=>t.remove(), 3600);
+    const t=document.createElement('div');
+    t.textContent=msg; t.style.position='fixed'; t.style.zIndex='9999'; t.style.left='50%'; t.style.top='20px'; t.style.transform='translateX(-50%)';
+    t.style.padding='10px 14px'; t.style.border='1px solid '+(error?'#3a1d1d':neutral?'#2c2c2c':'#14351c');
+    t.style.background=error?'#1a1212':neutral?'#121212':'#0f1a12'; t.style.color=error?'#fecaca':'#a7f3d0';
+    t.style.borderRadius='10px'; t.style.boxShadow='0 8px 22px rgba(0,0,0,.35)'; document.body.appendChild(t); setTimeout(()=>t.remove(), 3600);
   }
 })();
 </script>
 </body>
 </html>
+
+
 
