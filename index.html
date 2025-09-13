@@ -8,64 +8,60 @@
   <style>
     :root{
       --bg:#0b0b0b; --text:#e5e7eb; --muted:#9ca3af; --card:#121212; --input:#1a1a1a; --border:#2b2b2b;
-      /* Accent (change anytime) */
       --accent:#22c55e; --accent-2:#16a34a; /* EV green */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;background:radial-gradient(1200px 600px at 80% -10%, #171717, #0c0c0c 60%), #0b0b0b;color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial}
+    body{margin:0;background:radial-gradient(1200px 600px at 80% -10%, #171717, #0c0c0c 60%), var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial}
     a{color:var(--text);text-decoration:none}
-    .container{max-width:1200px;margin:0 auto;padding:28px 20px 56px}
+    .container{max-width:1100px;margin:0 auto;padding:28px 20px 56px}
     .header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0 16px}
     .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px}
     .brand-badge{width:28px;height:28px;border-radius:7px;background:conic-gradient(from 180deg, #777 0 25%, #999 0 50%, #777 0 75%, #aaa 0 100%);box-shadow:0 0 0 2px #222 inset}
     .pill{display:inline-flex;gap:8px;align-items:center;font-size:12px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:#cbd5e1;background:#0f0f0f}
 
-    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:start;margin-top:10px}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:start;margin-top:10px}
     .hero h1{font-size:44px;line-height:1.05;margin:0 0 12px}
     .subtle{color:#b3b9c3;font-size:15px}
     .points{margin:22px 0 14px;padding-left:0;list-style:none}
     .points li{margin:10px 0;display:flex;gap:10px;align-items:flex-start}
     .points .dot{width:8px;height:8px;margin-top:7px;border-radius:50%;background:linear-gradient(145deg,#6b7280,#9ca3af)}
 
-    .card{background:linear-gradient(180deg,#141414,#0f0f0f);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.35);padding:20px}
-    .vinBox{display:grid;grid-template-columns:1fr auto;gap:10px;margin:12px 0 10px}
-    .vinLarge{font-size:18px;padding:16px 14px}
-    .vinHelp{font-size:12px;color:#b6beca;margin-top:4px}
-    .vinMeta{display:flex;gap:10px;align-items:center;margin-top:6px;font-size:12px;color:#cbd5e1}
-    .vinCount{padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:#151515}
-    .vinWarn{color:#fca5a5}
+    .card{background:linear-gradient(180deg,#141414,#0f0f0f);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.35);padding:18px}
 
+    /* ——— Stepper ——— */
+    .wizard{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .w-step{display:flex;align-items:center;gap:8px;color:#a1a1aa;font-size:12px}
+    .w-num{width:28px;height:28px;border-radius:999px;display:grid;place-items:center;border:1px solid var(--border);background:#101010}
+    .w-sep{flex:1;height:2px;background:#242424;border-radius:999px}
+    .w-step.current .w-num{background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#001008;border-color:transparent;font-weight:800}
+    .w-step.done .w-num{background:var(--accent-2);color:#001008;border-color:transparent}
+    .w-step b{font-size:13px}
+
+    .stack{display:grid;gap:10px}
     input,select,button,textarea{font:inherit;color:var(--text)}
-    input[type="text"],input[type="email"],input[type="tel"],input[type="number"],select{width:100%;padding:12px 12px;border-radius:10px;border:1px solid var(--border);background:var(--input);outline:none}
+    input[type="text"],input[type="email"],input[type="tel"],input[type="number"],select{width:100%;padding:14px 12px;border-radius:10px;border:1px solid var(--border);background:var(--input);outline:none}
     input:focus,select:focus{border-color:#3a3a3a;box-shadow:0 0 0 3px rgba(34,197,94,.18)}
-
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:10px;border:1px solid transparent;background:linear-gradient(180deg,var(--accent),var(--accent-2) 70%);color:#001008;font-weight:800;cursor:pointer}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 16px;border-radius:10px;border:1px solid transparent;background:linear-gradient(180deg,var(--accent),var(--accent-2) 70%);color:#001008;font-weight:800;cursor:pointer}
     .btn.secondary{background:#151515;color:#d1d5db;border-color:#2b2b2b}
     .btn:disabled{opacity:.6;cursor:not-allowed}
 
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
     .muted{color:#c6cbd2;font-size:13px}
-    .decoded{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .decoded{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 6px}
     .chip{font-size:12px;padding:5px 8px;border:1px solid var(--border);border-radius:999px;background:#121212}
     .alert{padding:10px 12px;border-radius:10px;background:#121212;border:1px solid var(--border)}
     .alert.bad{border-color:#3a1d1d;background:#171213;color:#fca5a5}
     .alert.good{border-color:#14351c;background:#0f1a12;color:#bbf7d0}
-    .progress{height:8px;width:100%;border-radius:999px;background:#151515;border:1px solid #262626;overflow:hidden}
-    .progress>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#86efac);transition:width .3s ease}
-    .footer{margin-top:36px;padding-top:18px;border-top:1px solid #1f1f1f;color:#a1a1aa;font-size:12px}
-    .disclaimer{font-size:12px;color:#9ca3af;margin-top:8px}
+
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
     .hidden{display:none}
+
+    .footer{margin-top:36px;padding-top:18px;border-top:1px solid #1f1f1f;color:#a1a1aa;font-size:12px}
 
     @media (max-width:980px){.hero{grid-template-columns:1fr}}
     @media (max-width:720px){.grid3{grid-template-columns:1fr 1fr}}
-    @media (max-width:520px){
-      .hero h1{font-size:32px}
-      .card{padding:18px}
-      .grid2,.grid3{grid-template-columns:1fr}
-      .btn{padding:14px 16px}
-    }
+    @media (max-width:520px){.hero h1{font-size:32px}.grid2,.grid3{grid-template-columns:1fr}.btn{padding:14px 16px}}
   </style>
 </head>
 <body>
@@ -80,122 +76,95 @@
         <h1>Instant Cash Offers for <br/>Tesla, Rivian &amp; Lucid</h1>
         <p class="subtle">Sell your EV fast. Real offers from our nationwide dealer network.</p>
         <ul class="points">
-          <li><span class="dot"></span> <span><b>EV-specific valuations.</b> We don’t use outdated ICE formulas.</span></li>
+          <li><span class="dot"></span> <span><b>EV‑specific valuations.</b> We don’t use outdated ICE formulas.</span></li>
           <li><span class="dot"></span> <span><b>Get an offer in minutes.</b> Most deals close in &lt; 48 hours.</span></li>
           <li><span class="dot"></span> <span><b>True market pricing.</b> Backed by hungry EV buyers across the U.S.</span></li>
         </ul>
-        <div class="alert">Dealers: Have a trade-in EV? Use the same form and pick <b>“I’m a dealer.”</b></div>
+        <div class="alert">Dealers: Have a trade‑in EV? Use the same form and pick <b>“I’m a dealer.”</b></div>
       </div>
 
       <div class="card">
+        <!-- Stepper header -->
+        <div class="wizard" id="wizard">
+          <div class="w-step current"><div class="w-num"><b>1</b></div><span>VIN</span></div><div class="w-sep"></div>
+          <div class="w-step"><div class="w-num"><b>2</b></div><span>Contact</span></div><div class="w-sep"></div>
+          <div class="w-step"><div class="w-num"><b>3</b></div><span>Vehicle</span></div><div class="w-sep"></div>
+          <div class="w-step"><div class="w-num"><b>4</b></div><span>Loan</span></div>
+        </div>
+
         <!-- STEP 1: VIN -->
-        <div class="muted" style="font-weight:700;margin-bottom:6px">Step 1 — Enter your VIN</div>
-        <div class="vinBox">
-          <input id="vin" name="vin" class="vinLarge"
-                 type="text" inputmode="text" autocapitalize="characters" autocomplete="off"
-                 spellcheck="false" minlength="11" maxlength="17"
-                 placeholder="Paste a 17-character VIN" required />
-          <button id="decodeBtn" class="btn" type="button" aria-label="Decode VIN" disabled>Decode</button>
-        </div>
-        <div class="vinMeta">
-          <span id="vinCount" class="vinCount">0 / 17</span>
-          <span id="vinHint" class="vinHelp">Tip: You can paste; we ignore spaces & dashes. VINs never use I, O, or Q.</span>
-        </div>
-        <div id="decodeInfo" class="decoded" aria-live="polite"></div>
-        <div id="decodeWarn" class="muted" style="margin-top:4px"></div>
+        <section id="step1" class="stack">
+          <div class="muted" style="font-weight:700">Step 1 — Enter & decode your VIN</div>
+          <input id="vin" name="vin" type="text" inputmode="text" autocapitalize="characters" minlength="17" maxlength="17" placeholder="Paste a 17‑character VIN" autocomplete="off" required />
+          <button id="decodeBtn" class="btn" type="button">Decode</button>
+          <div class="muted" id="vinHint">Tip: Paste works great — we ignore spaces & dashes. VINs never use I, O, or Q.</div>
+          <div id="decodeInfo" class="decoded" aria-live="polite"></div>
+          <div id="decodeWarn" class="muted"></div>
+          <label class="muted" style="display:flex;gap:8px;align-items:center;margin-top:6px"><input type="checkbox" id="confirmCar" disabled> Yes, this is my EV.</label>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button id="next1" class="btn" disabled>Continue</button>
+          </div>
+        </section>
 
-        <hr style="border:0;border-top:1px solid var(--border);margin:16px 0">
+        <!-- STEP 2: CONTACT -->
+        <section id="step2" class="stack hidden">
+          <div class="muted" style="font-weight:700">Step 2 — Your contact</div>
+          <div class="grid2">
+            <input id="first" name="given-name" autocomplete="given-name" type="text" placeholder="First name" required />
+            <input id="last" name="family-name" autocomplete="family-name" type="text" placeholder="Last name" required />
+          </div>
+          <div class="grid2">
+            <input id="phone" name="tel" autocomplete="tel" type="tel" placeholder="Mobile number (we'll text you)" required />
+            <input id="email" name="email" autocomplete="email" type="email" placeholder="you@example.com" required />
+          </div>
+          <input id="zip" name="postal-code" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" placeholder="Vehicle ZIP code" required />
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button class="btn secondary" id="back2" type="button">Back</button>
+            <button class="btn" id="next2" type="button">Continue</button>
+          </div>
+        </section>
 
-        <!-- STEP 2: details (hidden until VIN decodes) -->
-        <div id="detailsSection" class="hidden">
-          <div class="muted" style="font-weight:700;margin-bottom:6px">Step 2 — Vehicle & Contact</div>
-          <form id="leadForm" novalidate>
-            <div class="grid2">
-              <div>
-                <label class="muted" for="miles">Miles</label>
-                <input id="miles" name="miles" type="number" min="0" step="1" placeholder="e.g., 24,800" />
-              </div>
-              <div>
-                <label class="muted" for="trim">Trim</label>
-                <input id="trim" name="trim" type="text" placeholder="Auto-filled if available" />
-              </div>
+        <!-- STEP 3: VEHICLE DETAILS -->
+        <section id="step3" class="stack hidden">
+          <div class="muted" style="font-weight:700">Step 3 — Vehicle details</div>
+          <div class="grid2">
+            <input id="miles" name="miles" type="number" min="0" step="1" placeholder="Miles (e.g., 24,800)" />
+            <input id="trim" name="trim" type="text" placeholder="Trim (auto‑filled if available)" />
+          </div>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button class="btn secondary" id="back3" type="button">Back</button>
+            <button class="btn" id="next3" type="button">Continue</button>
+          </div>
+        </section>
+
+        <!-- STEP 4: LOAN / TITLE -->
+        <section id="step4" class="stack hidden">
+          <div class="muted" style="font-weight:700">Step 4 — Loan / title</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <label><input type="radio" name="lien" value="title_in_hand" checked> Title in hand</label>
+            <label><input type="radio" name="lien" value="has_loan"> I have a loan</label>
+          </div>
+          <div id="loanBlock" class="hidden stack">
+            <input id="bank" type="text" placeholder="Lender / bank name" />
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+              <label><input type="radio" name="knowPayoff" value="yes"> I know my payoff</label>
+              <label><input type="radio" name="knowPayoff" value="no" checked> I don't know</label>
             </div>
+            <input id="payoff" type="number" min="0" step="1" placeholder="Approx. payoff amount" class="hidden" />
+          </div>
 
-            <div class="grid3" style="margin-top:12px">
-              <div>
-                <label class="muted" for="zip">Vehicle Location ZIP</label>
-                <input id="zip" name="postal-code" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" placeholder="ZIP code" required />
-              </div>
-              <div>
-                <label class="muted" for="first">First Name</label>
-                <input id="first" name="given-name" autocomplete="given-name" type="text" placeholder="First name" required />
-              </div>
-              <div>
-                <label class="muted" for="last">Last Name</label>
-                <input id="last" name="family-name" autocomplete="family-name" type="text" placeholder="Last name" required />
-              </div>
-            </div>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button class="btn secondary" id="back4" type="button">Back</button>
+            <button class="btn" id="submitBtn" type="button">Get Cash Offer</button>
+          </div>
 
-            <div class="grid2" style="margin-top:12px">
-              <div>
-                <label class="muted" for="email">Email</label>
-                <input id="email" name="email" autocomplete="email" type="email" placeholder="you@example.com" required />
-              </div>
-              <div>
-                <label class="muted" for="phone">Phone</label>
-                <input id="phone" name="tel" autocomplete="tel" type="tel" placeholder="(555) 555-5555" required />
-              </div>
-            </div>
-
-            <div class="grid2" style="margin-top:12px">
-              <div>
-                <label class="muted">Who are you?</label>
-                <div style="display:flex;gap:12px;margin-top:4px">
-                  <label><input type="radio" name="persona" value="dealer"> I’m a dealer</label>
-                  <label><input type="radio" name="persona" value="private" checked> This is my personal car</label>
-                </div>
-              </div>
-              <div id="dealerExtras" style="display:none">
-                <label class="muted" for="dealerName">Dealership (optional)</label>
-                <input id="dealerName" name="dealer-name" type="text" placeholder="Dealer name" />
-              </div>
-            </div>
-
-            <div class="grid2" style="margin-top:8px">
-              <div>
-                <label class="muted">Title / Loan Status</label>
-                <div style="display:flex;gap:12px;margin-top:4px">
-                  <label><input type="radio" name="lien" value="title_in_hand" checked> Title in hand</label>
-                  <label><input type="radio" name="lien" value="has_loan"> I have a loan</label>
-                </div>
-              </div>
-              <div id="payoffWrap" style="display:none">
-                <label class="muted" for="payoff">Approx. Loan Payoff (optional)</label>
-                <input id="payoff" name="loan-payoff" type="number" min="0" step="1" placeholder="e.g., 27500" />
-              </div>
-            </div>
-
-            <div style="margin:12px 0 8px">
-              <label class="muted"><input id="consent" type="checkbox" required /> I agree to be contacted about my offer and accept the OnlyEV <a href="#">terms</a> &amp; <a href="#">privacy</a>. No spam.</label>
-            </div>
-
-            <div class="progress" aria-label="Form completion"><i id="progress"></i></div>
-
-            <div style="display:flex;gap:12px;align-items:center;margin-top:14px">
-              <button id="submitBtn" class="btn" type="submit">Get Cash Offer</button>
-              <button id="saveBtn" class="btn secondary" type="button">Save &amp; finish later</button>
-            </div>
-
-            <div class="disclaimer">Supported today: Tesla, Rivian, Lucid. If your EV is another make, we’ll still try to route it to buyers—offers may take longer.</div>
-
-            <!-- hidden fields from VIN decode -->
-            <input type="hidden" id="year" name="year">
-            <input type="hidden" id="make" name="make">
-            <input type="hidden" id="model" name="model">
-            <input type="hidden" id="bodyClass" name="bodyClass">
-            <input type="hidden" id="driveType" name="driveType">
-          </form>
-        </div>
+          <!-- hidden fields from VIN decode -->
+          <input type="hidden" id="year" name="year">
+          <input type="hidden" id="make" name="make">
+          <input type="hidden" id="model" name="model">
+          <input type="hidden" id="bodyClass" name="bodyClass">
+          <input type="hidden" id="driveType" name="driveType">
+        </section>
       </div>
     </section>
 
@@ -205,182 +174,126 @@
 <script>
 (function(){
   const $ = (id)=>document.getElementById(id);
-  const vinEl = $('vin'), decodeBtn = $('decodeBtn'), decodeInfo = $('decodeInfo'), decodeWarn = $('decodeWarn');
-  const details = $('detailsSection'), dealerExtras = $('dealerExtras'), payoffWrap = $('payoffWrap');
-  const progress = $('progress'), yearNow = $('yearNow'); yearNow.textContent = new Date().getFullYear();
+  const stepEls = [ $('step1'), $('step2'), $('step3'), $('step4') ];
+  const wizard = document.getElementById('wizard');
+  let step = 1; // 1..4
 
-  // Capture UTM & referrer for the payload
-  const urlParams = new URLSearchParams(location.search);
-  const utm = Object.fromEntries([...urlParams.entries()].filter(([k])=>k.startsWith('utm_')));
+  const yearNow = document.getElementById('yearNow'); yearNow.textContent = new Date().getFullYear();
 
-  // VIN helpers
-  const BAD = /[IOQ]/i;                    // never valid in VINs
-  const SAN = s => s.toUpperCase().replace(/\s|-/g,''); // strip spaces/dashes, uppercase
+  // Util
+  const BAD = /[IOQ]/i; const SAN = s=> (s||'').toUpperCase().replace(/\s|-/g,'');
 
-  function setVIN(v){ const cleaned = SAN(v); if (vinEl.value !== cleaned) vinEl.value = cleaned; return cleaned; }
-  function updateVINUI(){
-    const v = setVIN(vinEl.value); const len = v.length;
-    $('vinCount').textContent = `${len} / 17`;
-    const ok = len === 17 && !BAD.test(v) && /^[A-Z0-9]+$/.test(v);
-    decodeBtn.disabled = !ok;
-    $('vinHint').classList.toggle('vinWarn', BAD.test(v));
+  function setStep(n){ step = Math.max(1, Math.min(4, n));
+    stepEls.forEach((el,i)=> el.classList.toggle('hidden', (i+1)!==step));
+    // stepper classes
+    [...wizard.querySelectorAll('.w-step')].forEach((w,i)=>{
+      w.classList.toggle('current', i+1===step);
+      w.classList.toggle('done', i+1<step);
+    });
+    // focus first input of the section
+    const firstInput = stepEls[step-1].querySelector('input[type="text"],input[type="tel"],input[type="email"],input[type="number"]');
+    if(firstInput) firstInput.focus({preventScroll:true});
   }
 
-  vinEl.addEventListener('input', ()=>{ updateVINUI(); if(vinEl.value.length===17 && !decodeBtn.disabled) decodeVIN(); });
-  vinEl.addEventListener('paste', e=>{ requestAnimationFrame(updateVINUI); }); // sanitize after paste
-  vinEl.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); if(!decodeBtn.disabled) decodeVIN(); }});
-
-  // Show/hide conditional sections in Step 2
-  document.addEventListener('change', (e)=>{
-    if(e.target.name==='persona') dealerExtras.style.display = (e.target.value==='dealer') ? 'block' : 'none';
-    if(e.target.name==='lien') payoffWrap.style.display = (e.target.value==='has_loan') ? 'block' : 'none';
-    if($('leadForm')) updateProgress();
-  });
-
-  // Progress bar — counts core required fields
-  function req(){ return [vinEl, $('zip'), $('first'), $('last'), $('email'), $('phone'), $('consent')]; }
-  function updateProgress(){
-    const items = req(); let filled = 0;
-    items.forEach(el => { if(!el) return; if(el.type==='checkbox'){ if(el.checked) filled++; } else if(el.value && el.value.trim()) filled++; });
-    progress.style.width = Math.min(100, Math.round((filled/items.length)*100)) + '%';
+  // ——— STEP 1: VIN + decode ———
+  const vin = $('vin'), decodeBtn = $('decodeBtn'), info = $('decodeInfo'), warn = $('decodeWarn'), confirmCar = $('confirmCar'), next1 = $('next1');
+  function validateVINField(){
+    const v = SAN(vin.value); if(v!==vin.value) vin.value = v;
+    const ok = v.length===17 && !BAD.test(v) && /^[A-Z0-9]+$/.test(v);
+    decodeBtn.disabled = !ok; return ok;
   }
+  vin.addEventListener('input', ()=>{ validateVINField(); });
+  vin.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); if(validateVINField()) decodeVIN(); }});
+  decodeBtn.addEventListener('click', ()=>{ if(validateVINField()) decodeVIN(); });
 
   async function decodeVIN(){
-    const v = setVIN(vinEl.value);
-    decodeInfo.innerHTML = ''; decodeWarn.innerHTML = '';
-
-    if(v.length !== 17){ decodeWarn.textContent = 'VIN must be 17 characters.'; return; }
-    if(BAD.test(v)){ decodeWarn.innerHTML = '<span class="alert bad">VIN cannot contain I, O, or Q.</span>'; return; }
-
+    const v = SAN(vin.value); info.innerHTML=''; warn.textContent=''; confirmCar.checked=false; confirmCar.disabled=true; next1.disabled=true;
     decodeBtn.disabled = true; decodeBtn.textContent = 'Decoding…';
     try{
       const url = `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/${encodeURIComponent(v)}?format=json`;
       const res = await fetch(url); const data = await res.json();
       const row = (data && data.Results && data.Results[0]) || {};
-      const year=row.ModelYear||'', make=row.Make||'', model=row.Model||'', trim=row.Trim||'', body=row.BodyClass||'', drive=row.DriveType||'';
-
-      // Fill hidden fields + optional Trim
+      const year=row.ModelYear||''; const make=row.Make||''; const model=row.Model||''; const trim=row.Trim||''; const body=row.BodyClass||''; const drive=row.DriveType||'';
       $('year').value=year; $('make').value=make; $('model').value=model; $('bodyClass').value=body; $('driveType').value=drive;
-      if(trim && !$('trim').value) $('trim').value = trim;
-
-      // Chips
-      const chips = [];
-      if(year) chips.push(`<span class="chip">${year}</span>`);
-      if(make) chips.push(`<span class="chip">${make}</span>`);
-      if(model) chips.push(`<span class="chip">${model}</span>`);
-      if(trim) chips.push(`<span class="chip">Trim: ${trim}</span>`);
-      if(body) chips.push(`<span class="chip">${body}</span>`);
-      if(drive) chips.push(`<span class="chip">${drive}</span>`);
-      decodeInfo.innerHTML = chips.join(' ');
-
-      const allow = ['TESLA','RIVIAN','LUCID'];
-      if(make && !allow.includes(make.toUpperCase())){
-        decodeWarn.innerHTML = '<span class="alert bad">Heads up: we prioritize Tesla, Rivian &amp; Lucid. We can still collect your info; offers may be slower.</span>';
-      } else if(make){
-        decodeWarn.innerHTML = `<span class="alert good">Great! ${make} is supported.</span>`;
-      }
-
-      // Reveal Step 2 + scroll into view
-      details.classList.remove('hidden');
-      setTimeout(()=>details.scrollIntoView({behavior:'smooth', block:'start'}), 150);
-    }catch(err){
-      console.error(err);
-      decodeWarn.innerHTML = '<span class="alert bad">Couldn’t decode that VIN. Please check and try again.</span>';
-    }finally{
-      decodeBtn.disabled = false; decodeBtn.textContent = 'Decode';
-      if($('leadForm')) updateProgress();
-    }
+      if(trim && !$('trim').value) $('trim').value=trim;
+      const chips=[]; if(year) chips.push(`<span class="chip">${year}</span>`); if(make) chips.push(`<span class="chip">${make}</span>`); if(model) chips.push(`<span class="chip">${model}</span>`); if(trim) chips.push(`<span class="chip">Trim: ${trim}</span>`); if(body) chips.push(`<span class="chip">${body}</span>`); if(drive) chips.push(`<span class="chip">${drive}</span>`);
+      info.innerHTML = chips.join(' ');
+      if(make){ warn.innerHTML = '<span class="alert good">VIN decoded. Please confirm.</span>'; confirmCar.disabled=false; }
+      else { warn.innerHTML = '<span class="alert bad">Couldn’t decode that VIN. Please check and try again.</span>'; }
+    }catch(e){ console.error(e); warn.innerHTML = '<span class="alert bad">VIN decode failed. Try again.</span>'; }
+    finally{ decodeBtn.disabled=false; decodeBtn.textContent='Decode'; }
   }
-  decodeBtn.addEventListener('click', decodeVIN);
+  confirmCar.addEventListener('change', ()=>{ next1.disabled = !confirmCar.checked; });
+  next1.addEventListener('click', ()=> setStep(2));
 
-  // Save draft locally
-  const saveBtn = $('saveBtn');
-  if(saveBtn){ saveBtn.addEventListener('click', ()=>{ localStorage.setItem('onlyev_draft', JSON.stringify(collectPayload())); toast('Saved locally.'); }); }
+  // ——— STEP 2: Contact ———
+  $('back2').addEventListener('click', ()=> setStep(1));
+  $('next2').addEventListener('click', ()=>{
+    const req=['first','last','phone','email','zip'];
+    for(const id of req){ const el=$(id); if(!el.value.trim()){ el.focus(); return; } }
+    setStep(3);
+  });
 
-  // Restore draft (if any)
-  window.addEventListener('load', ()=>{
-    updateVINUI();
-    const draft = localStorage.getItem('onlyev_draft');
-    if(!draft) return;
+  // ——— STEP 3: Vehicle details ———
+  $('back3').addEventListener('click', ()=> setStep(2));
+  $('next3').addEventListener('click', ()=> setStep(4));
+
+  // ——— STEP 4: Loan / title ———
+  const loanRadios = document.querySelectorAll('input[name="lien"]');
+  const loanBlock = $('loanBlock');
+  loanRadios.forEach(r=> r.addEventListener('change', ()=>{ loanBlock.classList.toggle('hidden', r.value!=='has_loan' || !r.checked ? document.querySelector('input[name="lien"][value="has_loan"]').checked===false : false ); }));
+  document.querySelectorAll('input[name="knowPayoff"]').forEach(r=> r.addEventListener('change', ()=>{ $('payoff').classList.toggle('hidden', r.value!=='yes'); }));
+  $('back4').addEventListener('click', ()=> setStep(3));
+
+  // Submit — either send to webhook or log locally for GitHub Pages
+  const FORM_ENDPOINT = '';// e.g. 'https://hook.integromat.com/xxxxx'
+  const THANK_YOU_URL = '';// optional
+  $('submitBtn').addEventListener('click', async ()=>{
+    // naive validations
+    if(SAN(vin.value).length!==17 || !confirmCar.checked){ setStep(1); return; }
+    const email = $('email').value.trim(); const phone=$('phone').value.replace(/\D/g,'');
+    if(!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) { setStep(2); $('email').focus(); return; }
+    if(phone.length<10){ setStep(2); $('phone').focus(); return; }
+
+    const payload = collectPayload();
     try{
-      const d = JSON.parse(draft);
-      // if user already started Step 2 before
-      if(d.zip !== undefined) details.classList.remove('hidden');
-      ['vin','zip','first','last','email','phone','miles','trim','dealerName','payoff'].forEach(id=>{ if(d[id]) { const el=$(id); if(el) el.value=d[id]; }});
-      if(d.persona){ const r=document.querySelector(`input[name="persona"][value="${d.persona}"]`); if(r) r.checked=true; dealerExtras.style.display=(d.persona==='dealer')?'block':'none'; }
-      if(d.lien){ const r2=document.querySelector(`input[name="lien"][value="${d.lien}"]`); if(r2) r2.checked=true; payoffWrap.style.display=(d.lien==='has_loan')?'block':'none'; }
-      if(d.consent==='yes' && $('consent')) $('consent').checked=true;
-      updateProgress();
-    }catch{}
+      if(FORM_ENDPOINT){
+        const res = await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        if(!res.ok) throw new Error('Network error');
+        toast('Thanks! Expect a text shortly.');
+      }else{
+        console.log('Lead payload (no endpoint set):', payload);
+        toast('Saved locally. Add a webhook URL to send to your buyers.', true);
+      }
+      if(THANK_YOU_URL) setTimeout(()=> location.href = THANK_YOU_URL, 600);
+    }catch(e){ toast('Submit failed. Try again.', false, true); }
   });
 
   function collectPayload(){
-    const get = id => $(id) ? (id==='vin'?SAN($(id).value):$(id).value || '').trim() : '';
-    const persona = (document.querySelector('input[name="persona"]:checked')||{}).value || '';
-    const lien = (document.querySelector('input[name="lien"]:checked')||{}).value || '';
+    const persona='private'; // simplified here; could add persona toggle back if needed
+    const lien=(document.querySelector('input[name="lien"]:checked')||{}).value||'';
+    const knowPayoff=(document.querySelector('input[name="knowPayoff"]:checked')||{}).value||'';
     return {
-      vin:get('vin'), year:get('year'), make:get('make'), model:get('model'), trim:get('trim'),
-      bodyClass:get('bodyClass'), driveType:get('driveType'),
-      miles:get('miles'), zip:get('zip'), first:get('first'), last:get('last'),
-      email:get('email'), phone:get('phone'),
-      persona, dealerName:get('dealerName'), lien, payoff:get('payoff'),
-      consent: ($('consent') && $('consent').checked) ? 'yes' : 'no',
-      ts:new Date().toISOString(), source:'onlyev.com/cash-offer', utm, referrer:document.referrer
+      vin:SAN($('vin').value), confirmCar: $('confirmCar').checked?'yes':'no',
+      year:$('year').value, make:$('make').value, model:$('model').value, trim:$('trim').value, bodyClass:$('bodyClass').value, driveType:$('driveType').value,
+      miles:$('miles').value, zip:$('zip').value, first:$('first').value, last:$('last').value, email:$('email').value, phone:$('phone').value,
+      persona, lien, bank:$('bank').value, knowPayoff, payoff:$('payoff').value,
+      ts:new Date().toISOString(), source:'onlyev.com/cash-offer', referrer:document.referrer
     };
   }
 
-  function validEmail(v){ return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v); }
-
-  // IMPORTANT: set this when you're ready to send leads somewhere.
-  const FORM_ENDPOINT = '';     // e.g. 'https://hook.integromat.com/xxxxx'
-  const THANK_YOU_URL = '';     // optional redirect after submit
-
-  document.addEventListener('submit', async (e)=>{
-    if(e.target && e.target.id==='leadForm'){
-      e.preventDefault();
-      try{
-        if(SAN(vinEl.value).length !== 17) throw new Error('Enter and decode a full 17-char VIN first.');
-        ['zip','first','last','email','phone','consent'].forEach(id=>{
-          const el=$(id);
-          if(el.type==='checkbox'){ if(!el.checked) throw new Error('Please accept the terms.'); }
-          else if(!el.value.trim()) throw new Error('Please complete all required fields.');
-        });
-        if(!validEmail($('email').value.trim())) throw new Error('Please enter a valid email.');
-        if($('phone').value.replace(/\\D/g,'').length < 10) throw new Error('Please enter a valid phone number.');
-
-        const payload = collectPayload();
-        $('submitBtn').disabled = true; $('submitBtn').textContent = 'Submitting…';
-
-        if(FORM_ENDPOINT){
-          const res = await fetch(FORM_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-          if(!res.ok) throw new Error('Submission failed. Try again.');
-          toast('Thanks! Expect a text shortly.');
-        }else{
-          console.log('Lead payload (no endpoint set):', payload);
-          toast('Saved locally. Add a webhook URL to send to your buyers.', true);
-        }
-
-        if(THANK_YOU_URL){ setTimeout(()=> location.href = THANK_YOU_URL, 600); }
-        e.target.reset(); decodeInfo.innerHTML=''; decodeWarn.innerHTML=''; updateProgress();
-      }catch(err){
-        toast(err.message || 'Please check the form and try again.', false, true);
-      }finally{
-        $('submitBtn').disabled = false; $('submitBtn').textContent = 'Get Cash Offer';
-      }
-    }
-  });
-
   function toast(msg, neutral=false, error=false){
-    const t=document.createElement('div');
-    t.textContent=msg; t.style.position='fixed'; t.style.zIndex='9999'; t.style.left='50%'; t.style.top='20px'; t.style.transform='translateX(-50%)';
-    t.style.padding='10px 14px'; t.style.border='1px solid '+(error?'#3a1d1d':neutral?'#2c2c2c':'#14351c');
-    t.style.background=error?'#1a1212':neutral?'#121212':'#0f1a12'; t.style.color=error?'#fecaca':'#a7f3d0';
+    const t=document.createElement('div'); t.textContent=msg; t.style.position='fixed'; t.style.zIndex='9999'; t.style.left='50%'; t.style.top='20px'; t.style.transform='translateX(-50%)';
+    t.style.padding='10px 14px'; t.style.border='1px solid '+(error?'#3a1d1d':neutral?'#2c2c2c':'#14351c'); t.style.background=error?'#1a1212':neutral?'#121212':'#0f1a12'; t.style.color=error?'#fecaca':'#a7f3d0';
     t.style.borderRadius='10px'; t.style.boxShadow='0 8px 22px rgba(0,0,0,.35)'; document.body.appendChild(t); setTimeout(()=>t.remove(), 3600);
   }
+
+  setStep(1);
 })();
 </script>
 </body>
 </html>
+
 
 
 
