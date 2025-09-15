@@ -8,8 +8,8 @@
   <style>
     :root{
       --bg:#0b0b0b; --text:#e5e7eb; --muted:#9ca3af; --card:#121212; --input:#1a1a1a; --border:#2b2b2b;
-      /* Accent (change anytime) */
-      --accent:#22c55e; --accent-2:#16a34a; /* EV green */
+      /* Accent (EV green) */
+      --accent:#22c55e; --accent-2:#16a34a;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -287,8 +287,11 @@
   $('back4').addEventListener('click', ()=> setStep(3));
 
   // Submit (GitHub Pages safe)
-  const FORM_ENDPOINT = ''; // set when ready (e.g., to Zapier, Make, or your API)
+  // If running on GitHub Pages (*.github.io) -> don't POST.
+  // Otherwise (Vercel or future custom domain) -> POST to our email API.
+  const FORM_ENDPOINT = /\.github\.io$/.test(location.hostname) ? '' : '/api/leads';
   const THANK_YOU_URL = ''; // optional
+
   $('submitBtn').addEventListener('click', async ()=>{
     if(SAN(vin.value).length!==17 || !confirmCar.checked){ setStep(1); return; }
     const email=$('email').value.trim(), phone=$('phone').value.replace(/\D/g,'');
@@ -340,6 +343,7 @@
 </script>
 </body>
 </html>
+
 
 
 
