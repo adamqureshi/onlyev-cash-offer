@@ -1,73 +1,78 @@
-// /api/leads.js — Vercel Serverless Function (no extra packages needed)
+// /api/leads.js — Vercel Serverless Function (Node runtime)
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
+    // Body may arrive as string or object
     const d = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
 
-    const subject = `OnlyEV Lead: ${d.year || ''} ${d.make || ''} ${d.model || ''} — ${d.vin || ''}`
-      .replace(/\s+/g,' ').trim();
+    // --- ENV VARS ---
+    const { RESEND_API_KEY, EMAIL_TO, EMAIL_FROM } = process.env;
+    if (!RESEND_API_KEY) throw new Error('Missing env: RESEND_API_KEY');
+    if (!EMAIL_TO) throw new Error('Missing env: EMAIL_TO');
+    const from = EMAIL_FROM && EMAIL_FROM.trim()
+      ? EMAIL_FROM.trim()
+      // Safe default sender (no domain verification needed)
+      : 'OnlyEV <no-reply@onresend.com>';
+
+    // --- Compose message ---
+    const clean = (s) => (s || '').toString().replace(/\s+/g, ' ').trim();
+    const subject = clean(
+      `OnlyEV Lead: ${d.year || ''} ${d.make || ''} ${d.model || ''} — ${d.vin || ''}`
+    );
 
     const html = `
       <div style="font-family:system-ui,Segoe UI,Roboto,Arial;color:#111">
         <h2>New Cash Offer Lead</h2>
-        <h3>Vehicle</h3>
-        <ul>
-          <li><b>VIN:</b> ${d.vin || ''}</li>
-          <li><b>Year/Make/Model:</b> ${d.year || ''} ${d.make || ''} ${d.model || ''}</li>
-          <li><b>Trim:</b> ${d.trim || ''}</li>
-          <li><b>Miles:</b> ${d.miles || ''}</li>
-          <li><b>Body:</b> ${d.bodyClass || ''}</li>
-          <li><b>Drive:</b> ${d.driveType || ''}</li>
-        </ul>
-        <h3>Seller</h3>
-        <ul>
-          <li><b>Name:</b> ${d.first || ''} ${d.last || ''}</li>
-          <li><b>Phone:</b> ${d.phone || ''}</li>
-          <li><b>Email:</b> ${d.email || ''}</li>
-          <li><b>ZIP:</b> ${d.zip || ''}</li>
-          <li><b>Persona:</b> ${d.persona || ''} ${d.dealerName ? '('+d.dealerName+')' : ''}</li>
-        </ul>
-        <h3>Title / Loan</h3>
-        <ul>
-          <li><b>Status:</b> ${d.lien || ''}</li>
-          <li><b>Lender:</b> ${d.bank || ''}</li>
-          <li><b>Knows payoff:</b> ${d.knowPayoff || ''}</li>
-          <li><b>Payoff:</b> ${d.payoff || ''}</li>
-        </ul>
-        ${Array.isArray(d.photos) && d.photos.length ? `
-          <h3>Photos</h3>
-          <ol>${d.photos.map(u => `<li><a href="${u}">${u}</a></li>`).join('')}</ol>
-        ` : ''}
-        <hr/>
-        <small>Source: ${d.source || ''}<br/>Referrer: ${d.referrer || ''}<br/>Timestamp: ${d.ts || ''}</small>
+        <p><b>VIN:</b> ${clean(d.vin)}</p>
+        <p><b>Year/Make/Model:</b> ${clean(d.year)} ${clean(d.make)} ${clean(d.model)} ${d.trim ? `(${clean(d.trim)})` : ''}</p>
+        <p><b>Miles:</b> ${clean(d.miles)} &nbsp; <b>ZIP:</b> ${clean(d.zip)}</p>
+        <p><b>Body:</b> ${clean(d.bodyClass)} &nbsp; <b>Drive:</b> ${clean(d.driveType)}</p>
+        <hr>
+        <p><b>Name:</b> ${clean(d.first)} ${clean(d.last)}</p>
+        <p><b>Email:</b> ${clean(d.email)} &nbsp; <b>Phone:</b> ${clean(d.phone)}</p>
+        ${d.persona ? `<p><b>Persona:</b> ${clean(d.persona)}</p>` : ''}
+        ${d.dealerName ? `<p><b>Dealer:</b> ${clean(d.dealerName)}</p>` : ''}
+        <p><b>Title/Loan:</b> ${clean(d.lien)} ${
+          d.bank ? `— <b>Bank:</b> ${clean(d.bank)}` : ''
+        } ${d.knowPayoff === 'yes' && d.payoff ? `— <b>Payoff:</b> $${clean(d.payoff)}` : ''}</p>
+        <hr>
+        <p><b>Time:</b> ${new Date().toISOString()}</p>
+        <p><b>Source:</b> ${clean(d.source)} &nbsp; <b>Referrer:</b> ${clean(d.referrer)}</p>
       </div>
     `;
 
-    const to = process.env.EMAIL_TO || 'contact@onlyev.com';
-    const from = process.env.EMAIL_FROM || 'OnlyEV <noreply@onresend.com>';
-
-    // Send email via Resend REST API (no SDK required)
+    // --- Send via Resend REST API ---
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        Authorization: `Bearer ${RESEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ from, to: [to], subject, html }),
+      body: JSON.stringify({
+        from,
+        to: [EMAIL_TO],
+        subject,
+        html,
+        reply_to: d.email || undefined,
+      }),
     });
 
+    const text = await r.text(); // capture response for logging
+
     if (!r.ok) {
-      const err = await r.text();
-      res.status(500).json({ ok: false, error: err });
-      return;
+      console.error('Resend error:', r.status, text);
+      return res
+        .status(500)
+        .json({ ok: false, error: 'Resend failed', status: r.status, detail: text });
     }
 
-    res.status(200).json({ ok: true });
-  } catch (e) {
-    res.status(500).json({ ok: false, error: e?.message || 'Unknown error' });
+    console.log('Lead sent via Resend:', subject);
+    return res.status(200).json({ ok: true });
+  } catch (err) {
+    console.error('Lead handler error:', err);
+    return res.status(500).json({ ok: false, error: err.message || 'Unhandled error' });
   }
 };
